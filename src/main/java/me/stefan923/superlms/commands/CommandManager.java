@@ -3,6 +3,7 @@ package me.stefan923.superlms.commands;
 import me.stefan923.superlms.SuperLMS;
 import me.stefan923.superlms.commands.type.CommandJoin;
 import me.stefan923.superlms.commands.type.CommandReload;
+import me.stefan923.superlms.commands.type.CommandSetLocation;
 import me.stefan923.superlms.commands.type.CommandSuperLMS;
 import me.stefan923.superlms.utils.MessageUtils;
 import me.stefan923.superlms.exceptions.MissingPermissionException;
@@ -31,8 +32,9 @@ public class CommandManager implements CommandExecutor, MessageUtils {
         plugin.getCommand("superlms").setExecutor(this);
         AbstractCommand commandSuperLMS = addCommand(new CommandSuperLMS());
 
-        addCommand(new CommandReload(commandSuperLMS));
         addCommand(new CommandJoin(commandSuperLMS));
+        addCommand(new CommandReload(commandSuperLMS));
+        addCommand(new CommandSetLocation(commandSuperLMS));
 
         for (AbstractCommand abstractCommand : commands) {
             if (abstractCommand.getParent() != null) continue;
