@@ -31,7 +31,7 @@ public class CommandJoin extends AbstractCommand implements MessageUtils {
         }
 
         if (instance.getPlayers().size() >= instance.getSettingsManager().getConfig().getInt("Game.Maximum Player Count")) {
-            sender.sendMessage(formatAll(language.getString("Command.Join.Game Not Available")));
+            sender.sendMessage(formatAll(language.getString("Command.Join.Game Is Full")));
             return ReturnType.SUCCESS;
         }
 
