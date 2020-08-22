@@ -1,0 +1,18 @@
+name: SuperLMS
+version: 0.0.0
+main: me.stefan923.superlms.SuperLMS
+description: Adds the Last Man Standing game to Minecraft.
+authors: [Stefan923]
+
+commands:
+  superlms:
+    description: Infos about this plugin.
+    aliases: [lms, superlastmanstanding, lastmanstanding]
+
+permissions:
+  superlms.admin:
+    description: Acces to powerfull commands, like reload, configuration commands.
+    default: op
+  superlms.play:
+    description: Acces to play Last Man Standing games.
+    default: op
