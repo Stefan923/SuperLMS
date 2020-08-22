@@ -3,6 +3,7 @@ package me.stefan923.superlms.utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 
 public interface MessageUtils {
     default String formatAll(String string) {
@@ -68,5 +69,30 @@ public interface MessageUtils {
             compensated += spaceLength;
         }
         player.sendMessage(sb.toString() + message);
+    }
+
+    default String convertTime(final long time, final FileConfiguration language) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        int years = (int) (time / 1000 / 60 / 60 / 24 / 30 / 12);
+        if (years != 0)
+            stringBuilder.append(years).append(" ").append(years == 1 ? language.getString("General.Word Year") : language.getString("General.Word Years"));
+        int months = (int) ((time / 1000 / 60 / 60 / 24 / 30) % 12);
+        if (months != 0)
+            stringBuilder.append(stringBuilder.length() != 0 ? " " : "").append(months).append(" ").append(months == 1 ? language.getString("General.Word Month") : language.getString("General.Word Months"));
+        int days = (int) ((time / 1000 / 60 / 60 / 24) % 30);
+        if (days != 0)
+            stringBuilder.append(stringBuilder.length() != 0 ? " " : "").append(days).append(" ").append(days == 1 ? language.getString("General.Word Day") : language.getString("General.Word Days"));
+        int hours = (int) ((time / 1000 / 60 / 60) % 24);
+        if (hours != 0)
+            stringBuilder.append(stringBuilder.length() != 0 ? " " : "").append(hours).append(" ").append(hours == 1 ? language.getString("General.Word Hour") : language.getString("General.Word Hours"));
+        int minutes = (int) ((time / 1000 / 60) % 60);
+        if (minutes != 0)
+            stringBuilder.append(stringBuilder.length() != 0 ? " " : "").append(minutes).append(" ").append(minutes == 1 ? language.getString("General.Word Minute") : language.getString("General.Word Minutes"));
+        int seconds = (int) ((time / 1000) % 60);
+        if (seconds != 0)
+            stringBuilder.append(stringBuilder.length() != 0 ? " " : "").append(seconds).append(" ").append(seconds == 1 ? language.getString("General.Word Second") : language.getString("General.Word Seconds"));
+
+        return stringBuilder.toString();
     }
 }
