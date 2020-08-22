@@ -23,6 +23,7 @@ public class LanguageManager {
         config = YamlConfiguration.loadConfiguration(cfile);
 
         config.options().header("SuperLMS by Stefan923\n");
+        config.addDefault("Command.Exit.Not In Game", "&8(&3!&8) &cYou aren't in a Last Man Standing game.");
         config.addDefault("Command.Join.Game Already Started", "&8(&3!&8) &cThe game has already started.");
         config.addDefault("Command.Join.Game Is Full", "&8(&3!&8) &cThe game is full.");
         config.addDefault("Command.Join.Game Not Available", "&8(&3!&8) &cThere is no arena available.");

@@ -29,6 +29,7 @@ public class CommandManager implements CommandExecutor, MessageUtils {
         plugin.getCommand("superlms").setExecutor(this);
         AbstractCommand commandSuperLMS = addCommand(new CommandSuperLMS());
 
+        addCommand(new CommandExit(commandSuperLMS));
         addCommand(new CommandJoin(commandSuperLMS));
         addCommand(new CommandPrepare(commandSuperLMS));
         addCommand(new CommandReload(commandSuperLMS));
