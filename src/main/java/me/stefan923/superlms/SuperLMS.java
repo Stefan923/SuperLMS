@@ -4,6 +4,7 @@ import me.stefan923.superlms.commands.CommandManager;
 import me.stefan923.superlms.game.GameManager;
 import me.stefan923.superlms.game.GameStatus;
 import me.stefan923.superlms.language.LanguageManager;
+import me.stefan923.superlms.listeners.*;
 import me.stefan923.superlms.settings.InventoryManager;
 import me.stefan923.superlms.settings.SettingsManager;
 import me.stefan923.superlms.utils.MessageUtils;
@@ -68,6 +69,11 @@ public class SuperLMS extends JavaPlugin implements MessageUtils {
         Integer i = 0;
         FileConfiguration settings = settingsManager.getConfig();
         PluginManager pluginManager = getServer().getPluginManager();
+        pluginManager.registerEvents(new EntityDamageListener(this), this);
+        pluginManager.registerEvents(new FoodLevelChangeListener(this), this);
+        pluginManager.registerEvents(new PlayerCommandPreprocessListener(this), this);
+        pluginManager.registerEvents(new PlayerDeathListener(this), this);
+        pluginManager.registerEvents(new PlayerDropItemListener(this), this);
         return i;
     }
 
