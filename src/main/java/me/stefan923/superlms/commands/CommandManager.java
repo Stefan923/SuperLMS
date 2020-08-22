@@ -1,10 +1,7 @@
 package me.stefan923.superlms.commands;
 
 import me.stefan923.superlms.SuperLMS;
-import me.stefan923.superlms.commands.type.CommandJoin;
-import me.stefan923.superlms.commands.type.CommandReload;
-import me.stefan923.superlms.commands.type.CommandSetLocation;
-import me.stefan923.superlms.commands.type.CommandSuperLMS;
+import me.stefan923.superlms.commands.type.*;
 import me.stefan923.superlms.utils.MessageUtils;
 import me.stefan923.superlms.exceptions.MissingPermissionException;
 import org.bukkit.command.Command;
@@ -33,6 +30,7 @@ public class CommandManager implements CommandExecutor, MessageUtils {
         AbstractCommand commandSuperLMS = addCommand(new CommandSuperLMS());
 
         addCommand(new CommandJoin(commandSuperLMS));
+        addCommand(new CommandPrepare(commandSuperLMS));
         addCommand(new CommandReload(commandSuperLMS));
         addCommand(new CommandSetLocation(commandSuperLMS));
 

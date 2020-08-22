@@ -31,12 +31,15 @@ public class CommandSuperLMS extends AbstractCommand implements MessageUtils {
     @Override
     protected List<String> onTab(SuperLMS instance, CommandSender sender, String... args) {
         List<String> list = new ArrayList<>();
-        if (sender.hasPermission("superlms.play"))
+        if (sender.hasPermission("superlms.play")) {
             list.add("join");
-        if (sender.hasPermission("superlms.admin"))
+        }
+        if (sender.hasPermission("superlms.admin")) {
+            list.add("prepared");
             list.add("reload");
             list.add("setLocation");
-        return null;
+        }
+        return list;
     }
 
     @Override

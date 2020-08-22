@@ -27,11 +27,6 @@ public class SuperLMS extends JavaPlugin implements MessageUtils {
     private GameManager gameManager;
 
     public static ArrayList<Player> players;
-    public static HashMap<String, String> status;
-    public static HashMap<Player, ItemStack[]> playerItems;
-    public static HashMap<Player, ItemStack[]> playerArmors;
-    public static HashMap<String, BukkitRunnable> tasks;
-    public static HashMap<String, Integer> time;
 
     @Override
     public void onEnable() {
@@ -47,15 +42,9 @@ public class SuperLMS extends JavaPlugin implements MessageUtils {
         inventoryManager.setup(this);
 
         commandManager = new CommandManager(this);
+        gameManager = new GameManager(this);
 
         players = new ArrayList<>();
-        status = new HashMap<>();
-        playerItems = new HashMap<>();
-        playerArmors = new HashMap<>();
-        tasks = new HashMap<>();
-        time = new HashMap<>();
-
-        gameManager = new GameManager(this);
 
         sendLogger("&8&l> &7&m------- &8&l( &3&lSuperLMS &b&lby Stefan923 &8&l) &7&m------- &8&l<");
         sendLogger("&b   Plugin has been initialized.");
@@ -63,11 +52,12 @@ public class SuperLMS extends JavaPlugin implements MessageUtils {
         sendLogger("&b   Enabled listeners: &3" + enableListeners());
         sendLogger("&b   Enabled commands: &3" + enableCommands());
         sendLogger("&8&l> &7&m------- &8&l( &3&lSuperLMS &b&lby Stefan923 &8&l) &7&m------- &8&l<");
+
+        timeTask();
     }
 
     private Integer enableListeners() {
-        Integer i = 0;
-        FileConfiguration settings = settingsManager.getConfig();
+        Integer i = 5;
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new EntityDamageListener(this), this);
         pluginManager.registerEvents(new FoodLevelChangeListener(this), this);
@@ -125,20 +115,15 @@ public class SuperLMS extends JavaPlugin implements MessageUtils {
 
                     if (hour == 9 && minute == 0) {
                         gameManager.waitForPlayers();
-                    }
-                    if (hour == 12 && minute == 0) {
+                    } else if (hour == 12 && minute == 0) {
                         gameManager.waitForPlayers();
-                    }
-                    if (hour == 15 && minute == 0) {
+                    } else if (hour == 15 && minute == 0) {
                         gameManager.waitForPlayers();
-                    }
-                    if (hour == 18 && minute == 0) {
+                    } else if (hour == 18 && minute == 0) {
                         gameManager.waitForPlayers();
-                    }
-                    if (hour == 21 && minute == 0) {
+                    } else if (hour == 21 && minute == 0) {
                         gameManager.waitForPlayers();
-                    }
-                    if (hour == 0 && minute == 0) {
+                    } else if (hour == 0 && minute == 0) {
                         gameManager.waitForPlayers();
                     }
                 }
