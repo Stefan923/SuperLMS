@@ -21,6 +21,7 @@ public class SuperLMS extends JavaPlugin implements MessageUtils {
 
     private SettingsManager settingsManager;
     private LanguageManager languageManager;
+    private CommandManager commandManager;
     private InventoryManager inventoryManager;
     private GameManager gameManager;
 
@@ -43,6 +44,8 @@ public class SuperLMS extends JavaPlugin implements MessageUtils {
 
         inventoryManager = InventoryManager.getInstance();
         inventoryManager.setup(this);
+
+        commandManager = new CommandManager(this);
 
         players = new ArrayList<>();
         status = new HashMap<>();
