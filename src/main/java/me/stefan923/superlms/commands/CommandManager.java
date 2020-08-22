@@ -1,6 +1,7 @@
 package me.stefan923.superlms.commands;
 
 import me.stefan923.superlms.SuperLMS;
+import me.stefan923.superlms.commands.type.CommandJoin;
 import me.stefan923.superlms.commands.type.CommandReload;
 import me.stefan923.superlms.commands.type.CommandSuperLMS;
 import me.stefan923.superlms.utils.MessageUtils;
@@ -31,6 +32,7 @@ public class CommandManager implements CommandExecutor, MessageUtils {
         AbstractCommand commandSuperLMS = addCommand(new CommandSuperLMS());
 
         addCommand(new CommandReload(commandSuperLMS));
+        addCommand(new CommandJoin(commandSuperLMS));
 
         for (AbstractCommand abstractCommand : commands) {
             if (abstractCommand.getParent() != null) continue;

@@ -5,6 +5,7 @@ import me.stefan923.superlms.utils.MessageUtils;
 import me.stefan923.superlms.commands.AbstractCommand;
 import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,8 +31,11 @@ public class CommandSuperLMS extends AbstractCommand implements MessageUtils {
 
     @Override
     protected List<String> onTab(SuperLMS instance, CommandSender sender, String... args) {
+        List<String> list = new ArrayList<>();
         if (sender.hasPermission("superlms.admin"))
-            return Arrays.asList("reload");
+            list.add("reload");
+        if (sender.hasPermission("superlms.play"))
+            list.add("join");
         return null;
     }
 
