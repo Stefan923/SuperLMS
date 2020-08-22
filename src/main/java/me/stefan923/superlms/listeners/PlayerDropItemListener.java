@@ -15,7 +15,7 @@ public class PlayerDropItemListener implements Listener {
     }
 
     @EventHandler
-    public void onEntityDamage(final PlayerDropItemEvent event) {
+    public void onPlayerDropItem(final PlayerDropItemEvent event) {
         final Player player = event.getPlayer();
 
         if (instance.getPlayers().contains(player)) {
