@@ -30,7 +30,7 @@ public class CommandPrepare extends AbstractCommand implements MessageUtils, Ser
         sender.sendMessage(formatAll(language.getString("Command.Prepare.Success")));
         instance.getGameManager().waitForPlayers();
 
-        return ReturnType.SYNTAX_ERROR;
+        return ReturnType.SUCCESS;
     }
 
     @Override

@@ -35,7 +35,7 @@ public class CommandSuperLMS extends AbstractCommand implements MessageUtils {
             list.add("join");
         }
         if (sender.hasPermission("superlms.admin")) {
-            list.add("prepared");
+            list.add("prepare");
             list.add("reload");
             list.add("setLocation");
         }
