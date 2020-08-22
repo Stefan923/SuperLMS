@@ -8,6 +8,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class SettingsManager {
 
@@ -24,6 +25,12 @@ public class SettingsManager {
         config = YamlConfiguration.loadConfiguration(cfile);
 
         config.options().header("SuperLMS by Stefan923\n");
+        config.addDefault("Game.Starting Counter", 60);
+        config.addDefault("Game.Maximum Player Count", 30);
+        config.addDefault("Game.Minimum Player Count", 15);
+        config.addDefault("Game.Grace Period.Enabled", true);
+        config.addDefault("Game.Grace Period.Time In Seconds", 10);
+        config.addDefault("Game.Blocked Commands", Arrays.asList("shop", "spawn", "ec", "enderchest", "echest"));
         config.options().copyDefaults(true);
         save();
     }
