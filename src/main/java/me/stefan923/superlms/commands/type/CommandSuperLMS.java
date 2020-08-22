@@ -6,7 +6,6 @@ import me.stefan923.superlms.commands.AbstractCommand;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class CommandSuperLMS extends AbstractCommand implements MessageUtils {
@@ -22,7 +21,7 @@ public class CommandSuperLMS extends AbstractCommand implements MessageUtils {
         sendCenteredMessage(sender, formatAll("&3&lSuperLMS &f&lv" + instance.getDescription().getVersion()));
         sendCenteredMessage(sender, formatAll("&8&l» &fPlugin author: &bStefan923"));
         sendCenteredMessage(sender, formatAll(" "));
-        sendCenteredMessage(sender, formatAll("&8&l» &fAdds the afk status with customisable settings."));
+        sendCenteredMessage(sender, formatAll("&8&l» &fAdds the Last Man Standing game to Minecraft."));
         sendCenteredMessage(sender, formatAll("&8&m--+----------------------------------------+--&r"));
         sender.sendMessage(formatAll(" "));
 
