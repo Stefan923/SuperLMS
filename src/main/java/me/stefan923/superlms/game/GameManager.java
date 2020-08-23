@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.IOException;
@@ -16,10 +17,10 @@ import java.util.UUID;
 
 public class GameManager implements MessageUtils, SerializationUtils {
 
-    private SuperLMS instance;
+    private final SuperLMS instance;
 
-    private FileConfiguration settings;
-    private FileConfiguration language;
+    private final FileConfiguration settings;
+    private final FileConfiguration language;
 
     private GameStatus status;
 
@@ -44,6 +45,7 @@ public class GameManager implements MessageUtils, SerializationUtils {
         timer = settings.getInt("Game.Starting Counter");
         instance.getServer().getScheduler().scheduleAsyncRepeatingTask(instance, new BukkitRunnable() {
             private int announceTimer = 30;
+
             @Override
             public void run() {
                 if (status.equals(GameStatus.IDLE)) {
@@ -83,7 +85,7 @@ public class GameManager implements MessageUtils, SerializationUtils {
 
         try {
             Location arenaLocation = deserializeLocation(settings.getString("Game.Locations.Arena"));
-            ItemStack[] contents = fromBase64(settings.getString("Game.Kit.Inventory")).getContents();
+            ItemStack[] contents = itemStackArrayFromBase64(settings.getString("Game.Kit.Inventory"));
             ItemStack[] armorContents = itemStackArrayFromBase64(settings.getString("Game.Kit.Armor"));
 
             instance.getPlayers().forEach(player -> {
@@ -122,17 +124,37 @@ public class GameManager implements MessageUtils, SerializationUtils {
         }
     }
 
+    public void endGame() {
+        Player winner = instance.getPlayers().get(0);
+
+        Bukkit.broadcastMessage(formatAll(language.getString("Game.Finished")
+                .replace("%winner%", winner.getName())
+                .replace("%time%", convertTime(System.currentTimeMillis() - startTime, language))));
+
+        removePlayer(winner);
+        status = GameStatus.IDLE;
+    }
+
     public void addPlayer(Player player) {
         instance.getPlayers().add(player);
 
         UUID playerUUID = player.getUniqueId();
+        PlayerInventory playerInventory = player.getInventory();
         InventoryManager inventoryManager = instance.getInventoryManager();
 
-        String[] serializedInventory = playerInventoryToBase64(player.getInventory());
-        inventoryManager.getConfig().set(playerUUID + ".inventory", serializedInventory[0]);
-        inventoryManager.getConfig().set(playerUUID + ".armor", serializedInventory[1]);
+        inventoryManager.getConfig().set(playerUUID + ".inventory", itemStackArrayToBase64(playerInventory.getContents()));
+        inventoryManager.getConfig().set(playerUUID + ".armor", itemStackArrayToBase64(playerInventory.getArmorContents()));
+        inventoryManager.getConfig().set(playerUUID + ".experience", (double) player.getExp());
         inventoryManager.save();
-        player.getInventory().clear();
+
+        playerInventory.clear();
+        playerInventory.setHelmet(null);
+        playerInventory.setChestplate(null);
+        playerInventory.setLeggings(null);
+        playerInventory.setBoots(null);
+        player.setExp(0.0f);
+        player.setHealth(player.getMaxHealth());
+        player.setFoodLevel(20);
 
         if (status.equals(GameStatus.WAITING) && instance.getPlayers().size() >= settings.getInt("Game.Minimum Player Count")) {
             status = GameStatus.STARTING;
@@ -144,17 +166,6 @@ public class GameManager implements MessageUtils, SerializationUtils {
                 .replace("%player_name%", player.getName())
                 .replace("%current_count%", String.valueOf(instance.getPlayers().size()))
                 .replace("%max_count%", String.valueOf(settings.getInt("Game.Maximum Player Count")))));
-    }
-
-    public void endGame() {
-        Player winner = instance.getPlayers().get(0);
-
-        Bukkit.broadcastMessage(formatAll(language.getString("Game.Finished")
-                .replace("%winner%", winner.getName())
-                .replace("%time%", convertTime(System.currentTimeMillis() - startTime, language))));
-
-        removePlayer(winner);
-        status = GameStatus.IDLE;
     }
 
     public void removePlayer(Player player) {
@@ -173,16 +184,19 @@ public class GameManager implements MessageUtils, SerializationUtils {
             FileConfiguration inventoryConfig = inventoryManager.getConfig();
 
             try {
-                player.getInventory().setContents(fromBase64(inventoryConfig.getString(playerUUID + ".inventory")).getContents());
+                player.getInventory().setContents(itemStackArrayFromBase64(inventoryConfig.getString(playerUUID + ".inventory")));
                 player.getInventory().setArmorContents(itemStackArrayFromBase64(inventoryConfig.getString(playerUUID + ".armor")));
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            player.updateInventory();
+            player.setExp((float) inventoryConfig.getDouble(playerUUID + ".experience"));
 
-            player.getInventory().clear();
             player.teleport(deserializeLocation(settings.getString("Game.Locations.Spawn")));
             inventoryConfig.set(playerUUID + ".inventory", null);
             inventoryConfig.set(playerUUID + ".armor", null);
+            inventoryConfig.set(playerUUID + ".experience", null);
+            inventoryConfig.set(String.valueOf(playerUUID), null);
             inventoryManager.save();
         }
 
@@ -191,6 +205,12 @@ public class GameManager implements MessageUtils, SerializationUtils {
                     .replace("%player_name%", player.getName())
                     .replace("%current_count%", String.valueOf(instance.getPlayers().size()))
                     .replace("%max_count%", String.valueOf(settings.getInt("Game.Maximum Player Count")))));
+        }
+
+        instance.getPlayers().remove(player);
+
+        if (instance.getPlayers().size() == 1) {
+            endGame();
         }
     }
 
