@@ -138,7 +138,7 @@ public class GameManager implements MessageUtils, SerializationUtils {
         ConsoleCommandSender consoleCommandSender = Bukkit.getConsoleSender();
 
         for (String command : settings.getStringList("Game.Winner Rewards")) {
-            Bukkit.dispatchCommand(consoleCommandSender, "/" + command);
+            Bukkit.dispatchCommand(consoleCommandSender, "/" + command.replace("%player_name%", winner.getName()));
         }
     }
 
