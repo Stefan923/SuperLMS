@@ -65,12 +65,12 @@ public class GameManager implements MessageUtils, SerializationUtils {
                         cancel();
                     } else if (timer <= 10) {
                         Bukkit.broadcastMessage(formatAll(instance.getLanguageManager().getConfig().getString("Game.Starting In")
-                                .replace("%time%", convertTime(timer, language))
+                                .replace("%time%", convertTime(timer * 1000, language))
                                 .replace("%current_count%", String.valueOf(instance.getPlayers().size()))
                                 .replace("%max_count%", String.valueOf(settings.getInt("Game.Maximum Player Count")))));
                     } else if (timer % 30 == 0) {
                         Bukkit.broadcastMessage(formatAll(instance.getLanguageManager().getConfig().getString("Game.Starting In")
-                                .replace("%time%", convertTime(timer, language))
+                                .replace("%time%", convertTime(timer * 1000, language))
                                 .replace("%current_count%", String.valueOf(instance.getPlayers().size()))
                                 .replace("%max_count%", String.valueOf(settings.getInt("Game.Maximum Player Count")))));
                     }
@@ -115,10 +115,10 @@ public class GameManager implements MessageUtils, SerializationUtils {
                         cancel();
                     } else if (graceTimer-- <= 10) {
                         broadcastInGame(formatAll(instance.getLanguageManager().getConfig().getString("Game.Grace Period Ending")
-                                .replace("%time%", convertTime(graceTimer, language))));
+                                .replace("%time%", convertTime(graceTimer * 1000, language))));
                     } else if ((graceTimer--) % 30 == 0) {
                         broadcastInGame(formatAll(instance.getLanguageManager().getConfig().getString("Game.Grace Period Ending")
-                                .replace("%time%", convertTime(graceTimer, language))));
+                                .replace("%time%", convertTime(graceTimer * 1000, language))));
                     }
                 }
             }, 20L, 20L);
