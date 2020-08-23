@@ -28,6 +28,8 @@ public class GameManager implements MessageUtils, SerializationUtils {
     private int timer;
     private long startTime;
 
+    private int currentTaskID;
+
     public GameManager(SuperLMS instance) {
         this.instance = instance;
 
@@ -44,13 +46,13 @@ public class GameManager implements MessageUtils, SerializationUtils {
     public void waitForPlayers() {
         status = GameStatus.WAITING;
         timer = settings.getInt("Game.Starting Counter");
-        instance.getServer().getScheduler().scheduleAsyncRepeatingTask(instance, new BukkitRunnable() {
+        currentTaskID = instance.getServer().getScheduler().scheduleAsyncRepeatingTask(instance, new BukkitRunnable() {
             private int announceTimer = 30;
 
             @Override
             public void run() {
                 if (status.equals(GameStatus.IDLE)) {
-                    cancel();
+                    cancelCurrentTask();
                 }
                 if (status.equals(GameStatus.WAITING) && announceTimer++ == 30) {
                     announceTimer = 0;
@@ -62,7 +64,6 @@ public class GameManager implements MessageUtils, SerializationUtils {
                 if (status.equals(GameStatus.STARTING)) {
                     if (timer == 0) {
                         startGame();
-                        cancel();
                     } else if (timer <= 10) {
                         Bukkit.broadcastMessage(formatAll(instance.getLanguageManager().getConfig().getString("Game.Starting In")
                                 .replace("%time%", convertTime(timer * 1000, language))
@@ -81,6 +82,8 @@ public class GameManager implements MessageUtils, SerializationUtils {
     }
 
     public void startGame() {
+        Bukkit.getScheduler().cancelTask(currentTaskID);
+
         status = settings.getBoolean("Game.Grace Period.Enabled") ? GameStatus.GRACE : GameStatus.STARTED;
         startTime = System.currentTimeMillis();
 
@@ -101,18 +104,18 @@ public class GameManager implements MessageUtils, SerializationUtils {
         broadcastInGame(formatAll(instance.getLanguageManager().getConfig().getString("Game.Started")));
 
         if (status.equals(GameStatus.GRACE)) {
-            instance.getServer().getScheduler().scheduleAsyncRepeatingTask(instance, new BukkitRunnable() {
+            currentTaskID = instance.getServer().getScheduler().scheduleAsyncRepeatingTask(instance, new BukkitRunnable() {
                 private int graceTimer = settings.getInt("Game.Grace Period.Time In Seconds");
 
                 @Override
                 public void run() {
                     if (status.equals(GameStatus.IDLE)) {
-                        cancel();
+                        cancelCurrentTask();
                     }
                     if (graceTimer == 0) {
                         status = GameStatus.STARTED;
                         broadcastInGame(formatAll(instance.getLanguageManager().getConfig().getString("Game.Grace Period Ended")));
-                        cancel();
+                        cancelCurrentTask();
                     } else if (graceTimer-- <= 10) {
                         broadcastInGame(formatAll(instance.getLanguageManager().getConfig().getString("Game.Grace Period Ending")
                                 .replace("%time%", convertTime(graceTimer * 1000, language))));
@@ -225,6 +228,10 @@ public class GameManager implements MessageUtils, SerializationUtils {
         for (Player player : instance.getPlayers()) {
             player.sendMessage(message);
         }
+    }
+
+    private void cancelCurrentTask() {
+        Bukkit.getScheduler().cancelTask(currentTaskID);
     }
 
 }
