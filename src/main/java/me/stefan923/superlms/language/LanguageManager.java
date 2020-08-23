@@ -37,8 +37,8 @@ public class LanguageManager {
         config.addDefault("Game.Started", "&8(&3!&8) &fThe &bLast Man Standing &fgame has started. You have to fight all players to win the game.");
         config.addDefault("Game.Starting In", "&8(&3!&8) &fA &bLast Man Standing &fgame is starting in &3%time%&f. Use &3/superlms join&f. &7(&b%current_count%&7/&3%max_count%&7)");
         config.addDefault("Game.Waiting For Players", "&8(&3!&8) &fA &bLast Man Standing &fgame is waiting for players. Use &3/superlms join&f. &7(&b%current_count%&7/&3%max_count%&7)");
-        config.addDefault("Game.Waiting.Player Joined", "&8(&3!&8) &b%player_name% &fjoined the game. &7(&b%current_count%&7/&3%max_count%&7)");
-        config.addDefault("Game.Waiting.Player Quit", "&8(&3!&8) &b%player_name% &fjoined the game. &7(&b%current_count%&7/&3%max_count%&7)");
+        config.addDefault("Game.Waiting.Player Joined", "&8(&3!&8) &a%player_name% &fjoined the game. &7(&b%current_count%&7/&3%max_count%&7)");
+        config.addDefault("Game.Waiting.Player Quit", "&8(&3!&8) &c%player_name% &fquit the game. &7(&b%current_count%&7/&3%max_count%&7)");
         config.addDefault("General.Invalid Command Syntax", "&8(&3!&8) &cInvalid Syntax or you have no permission!\n&8(&3!&8) &fThe valid syntax is: &b%syntax%");
         config.addDefault("General.No Permission", "&8(&3!&8) &cYou need the &4%permission% &cpermission to do that!");
         config.options().copyDefaults(true);
