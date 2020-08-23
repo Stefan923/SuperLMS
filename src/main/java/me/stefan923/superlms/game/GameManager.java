@@ -6,6 +6,7 @@ import me.stefan923.superlms.utils.MessageUtils;
 import me.stefan923.superlms.utils.SerializationUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -133,6 +134,12 @@ public class GameManager implements MessageUtils, SerializationUtils {
 
         removePlayer(winner);
         status = GameStatus.IDLE;
+
+        ConsoleCommandSender consoleCommandSender = Bukkit.getConsoleSender();
+
+        for (String command : settings.getStringList("Game.Winner Rewards")) {
+            Bukkit.dispatchCommand(consoleCommandSender, "/" + command);
+        }
     }
 
     public void addPlayer(Player player) {

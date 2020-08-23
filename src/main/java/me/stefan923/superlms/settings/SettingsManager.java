@@ -30,6 +30,7 @@ public class SettingsManager {
         config.addDefault("Game.Minimum Player Count", 15);
         config.addDefault("Game.Grace Period.Enabled", true);
         config.addDefault("Game.Grace Period.Time In Seconds", 10);
+        config.addDefault("Game.Winner Rewards", Arrays.asList("give Stefan923 minecraft:diamond 16", "give Stefan923 minecraft:iron_ingot 32"));
         config.addDefault("Game.Blocked Commands", Arrays.asList("shop", "spawn", "ec", "enderchest", "echest"));
         config.options().copyDefaults(true);
         save();
