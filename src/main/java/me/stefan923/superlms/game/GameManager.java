@@ -116,12 +116,14 @@ public class GameManager implements MessageUtils, SerializationUtils {
                         status = GameStatus.STARTED;
                         broadcastInGame(formatAll(instance.getLanguageManager().getConfig().getString("Game.Grace Period Ended")));
                         cancelCurrentTask();
-                    } else if (graceTimer-- <= 10) {
+                    } else if (graceTimer <= 10) {
                         broadcastInGame(formatAll(instance.getLanguageManager().getConfig().getString("Game.Grace Period Ending")
                                 .replace("%time%", convertTime(graceTimer * 1000, language))));
-                    } else if ((graceTimer--) % 30 == 0) {
+                        --graceTimer;
+                    } else if (graceTimer % 30 == 0) {
                         broadcastInGame(formatAll(instance.getLanguageManager().getConfig().getString("Game.Grace Period Ending")
                                 .replace("%time%", convertTime(graceTimer * 1000, language))));
+                        --graceTimer;
                     }
                 }
             }, 20L, 20L);
@@ -141,7 +143,7 @@ public class GameManager implements MessageUtils, SerializationUtils {
         ConsoleCommandSender consoleCommandSender = Bukkit.getConsoleSender();
 
         for (String command : settings.getStringList("Game.Winner Rewards")) {
-            Bukkit.dispatchCommand(consoleCommandSender, "/" + command.replace("%player_name%", winner.getName()));
+            Bukkit.dispatchCommand(consoleCommandSender, command.replace("%player_name%", winner.getName()));
         }
     }
 
@@ -183,7 +185,9 @@ public class GameManager implements MessageUtils, SerializationUtils {
             return;
         }
 
-        if (status.equals(GameStatus.STARTING) && instance.getPlayers().size() < settings.getInt("Game.Minimum Player Count")) {
+        int playerCount = instance.getPlayers().size();
+
+        if (status.equals(GameStatus.STARTING) && playerCount < settings.getInt("Game.Minimum Player Count")) {
             status = GameStatus.WAITING;
             timer = settings.getInt("Game.Starting Counter");
         }
@@ -219,8 +223,10 @@ public class GameManager implements MessageUtils, SerializationUtils {
 
         instance.getPlayers().remove(player);
 
-        if (instance.getPlayers().size() == 1) {
+        if (playerCount == 1) {
             endGame();
+        } else if (playerCount < 1) {
+            status = GameStatus.IDLE;
         }
     }
 
