@@ -8,7 +8,6 @@ import me.stefan923.superlms.listeners.*;
 import me.stefan923.superlms.settings.InventoryManager;
 import me.stefan923.superlms.settings.SettingsManager;
 import me.stefan923.superlms.utils.MessageUtils;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
@@ -25,6 +24,8 @@ public class SuperLMS extends JavaPlugin implements MessageUtils {
     private CommandManager commandManager;
     private InventoryManager inventoryManager;
     private GameManager gameManager;
+
+    public ItemStack[] testItems;
 
     public static ArrayList<Player> players;
 
@@ -57,13 +58,14 @@ public class SuperLMS extends JavaPlugin implements MessageUtils {
     }
 
     private Integer enableListeners() {
-        Integer i = 5;
+        Integer i = 6;
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new EntityDamageListener(this), this);
         pluginManager.registerEvents(new FoodLevelChangeListener(this), this);
         pluginManager.registerEvents(new PlayerCommandPreprocessListener(this), this);
         pluginManager.registerEvents(new PlayerDeathListener(this), this);
         pluginManager.registerEvents(new PlayerDropItemListener(this), this);
+        pluginManager.registerEvents(new PlayerQuitListener(this), this);
         return i;
     }
 
