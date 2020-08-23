@@ -33,6 +33,7 @@ public class CommandManager implements CommandExecutor, MessageUtils {
         addCommand(new CommandJoin(commandSuperLMS));
         addCommand(new CommandPrepare(commandSuperLMS));
         addCommand(new CommandReload(commandSuperLMS));
+        addCommand(new CommandSetKit(commandSuperLMS));
         addCommand(new CommandSetLocation(commandSuperLMS));
 
         for (AbstractCommand abstractCommand : commands) {

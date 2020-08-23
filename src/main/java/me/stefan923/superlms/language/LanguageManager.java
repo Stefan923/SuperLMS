@@ -29,6 +29,7 @@ public class LanguageManager {
         config.addDefault("Command.Join.Game Not Available", "&8(&3!&8) &cThere is no arena available.");
         config.addDefault("Command.Prepare.Game Already Started", "&8(&3!&8) &cThe game can't be prepared, because it has already started.");
         config.addDefault("Command.Prepare.Success", "&8(&3!&8) &fThe game has been &bsuccessfully &fprepared.");
+        config.addDefault("Command.SetKit.Success", "&8(&3!&8) &fYou have successfully changed the game's &bstarting inventory&f.");
         config.addDefault("Command.SetLocation.Success", "&8(&3!&8) &fYou have successfully changed &b%location% &flocation.");
         config.addDefault("Game.Finished", "&8(&3!&8) &fThe game has been won by &b%winner% &fin &3%time%&f.");
         config.addDefault("Game.Grace Period Ended", "&8(&3!&8) &fThe &bgrace &fperiod has expired. Now, you can fight other players.");
