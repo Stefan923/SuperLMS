@@ -9,7 +9,6 @@ import me.stefan923.superlms.settings.InventoryManager;
 import me.stefan923.superlms.settings.SettingsManager;
 import me.stefan923.superlms.utils.MessageUtils;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -24,8 +23,6 @@ public class SuperLMS extends JavaPlugin implements MessageUtils {
     private CommandManager commandManager;
     private InventoryManager inventoryManager;
     private GameManager gameManager;
-
-    public ItemStack[] testItems;
 
     public static ArrayList<Player> players;
 
