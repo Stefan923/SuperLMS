@@ -6,6 +6,7 @@ import me.stefan923.superlms.utils.MessageUtils;
 import me.stefan923.superlms.utils.SerializationUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -27,8 +28,9 @@ public class GameManager implements MessageUtils, SerializationUtils {
 
     private int timer;
     private long startTime;
-
     private int currentTaskID;
+
+    private final Sound NOTE_SOUND;
 
     public GameManager(SuperLMS instance) {
         this.instance = instance;
@@ -37,6 +39,17 @@ public class GameManager implements MessageUtils, SerializationUtils {
         this.language = instance.getLanguageManager().getConfig();
 
         this.status = GameStatus.IDLE;
+
+        // Sound names changed, make it compatible with both versions
+        Sound clickSound = null;
+        String[] clickSounds = {"BLOCK_NOTE_BLOCK_XYLOPHONE", "NOTE_PIANO"};
+        for (String s : clickSounds) {
+            try {
+                clickSound = Sound.valueOf(s.toUpperCase());
+                break;
+            } catch (IllegalArgumentException ignored) {}
+        }
+        this.NOTE_SOUND = clickSound;
     }
 
     public GameStatus getStatus() {
@@ -65,6 +78,7 @@ public class GameManager implements MessageUtils, SerializationUtils {
                     if (timer == 0) {
                         startGame();
                     } else if (timer <= 10) {
+                        soundInGame(NOTE_SOUND);
                         Bukkit.broadcastMessage(formatAll(instance.getLanguageManager().getConfig().getString("Game.Starting In")
                                 .replace("%time%", convertTime(timer * 1000, language))
                                 .replace("%current_count%", String.valueOf(instance.getPlayers().size()))
@@ -117,6 +131,7 @@ public class GameManager implements MessageUtils, SerializationUtils {
                         broadcastInGame(formatAll(instance.getLanguageManager().getConfig().getString("Game.Grace Period Ended")));
                         cancelCurrentTask();
                     } else if (graceTimer <= 10) {
+                        soundInGame(NOTE_SOUND);
                         broadcastInGame(formatAll(instance.getLanguageManager().getConfig().getString("Game.Grace Period Ending")
                                 .replace("%time%", convertTime(graceTimer * 1000, language))));
                         --graceTimer;
@@ -239,6 +254,12 @@ public class GameManager implements MessageUtils, SerializationUtils {
     public void broadcastInGame(String message) {
         for (Player player : instance.getPlayers()) {
             player.sendMessage(message);
+        }
+    }
+
+    private void soundInGame(Sound sound) {
+        for (Player player : instance.getPlayers()) {
+            player.playSound(player.getEyeLocation(), sound, 1, 1);
         }
     }
 
