@@ -222,7 +222,7 @@ public class GameManager implements MessageUtils, SerializationUtils {
         if (status.equals(GameStatus.WAITING) || status.equals(GameStatus.STARTING)) {
             broadcastInGame(formatAll(instance.getLanguageManager().getConfig().getString("Game.Waiting.Player Quit")
                     .replace("%player_name%", player.getName())
-                    .replace("%current_count%", String.valueOf(instance.getPlayers().size() - 1))
+                    .replace("%current_count%", String.valueOf(instance.getPlayers().size()))
                     .replace("%max_count%", String.valueOf(settings.getInt("Game.Maximum Player Count")))));
         }
 
