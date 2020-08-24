@@ -8,8 +8,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class CommandSetLocation extends AbstractCommand implements MessageUtils, SerializationUtils {
 
@@ -52,8 +53,9 @@ public class CommandSetLocation extends AbstractCommand implements MessageUtils,
 
     @Override
     protected List<String> onTab(SuperLMS instance, CommandSender sender, String... args) {
-        if (sender.hasPermission("superlms.admin"))
-            return Arrays.asList("arena", "lobby", "spawn");
+        if (sender.hasPermission("superlms.admin") && args.length == 2 && args[0].toLowerCase().equalsIgnoreCase("setlocation"))
+            return Stream.of("arena", "lobby", "spawn").filter(string -> string.startsWith(args[1].toLowerCase())).collect(Collectors.toList());
+
         return null;
     }
 

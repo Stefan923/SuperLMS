@@ -7,6 +7,8 @@ import org.bukkit.command.CommandSender;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class CommandReload extends AbstractCommand implements MessageUtils {
 
@@ -43,8 +45,9 @@ public class CommandReload extends AbstractCommand implements MessageUtils {
 
     @Override
     protected List<String> onTab(SuperLMS instance, CommandSender sender, String... args) {
-        if (sender.hasPermission("superlms.admin"))
-            return Arrays.asList("settings", "languages", "all");
+        if (sender.hasPermission("superlms.admin") && args.length == 2 && args[0].toLowerCase().equalsIgnoreCase("reload"))
+            return Stream.of("all", "languages", "settings").filter(string -> string.startsWith(args[1].toLowerCase())).collect(Collectors.toList());
+
         return null;
     }
 
