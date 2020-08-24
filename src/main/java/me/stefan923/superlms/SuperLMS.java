@@ -20,7 +20,6 @@ public class SuperLMS extends JavaPlugin implements MessageUtils {
 
     private SettingsManager settingsManager;
     private LanguageManager languageManager;
-    private CommandManager commandManager;
     private InventoryManager inventoryManager;
     private GameManager gameManager;
 
@@ -39,7 +38,6 @@ public class SuperLMS extends JavaPlugin implements MessageUtils {
         inventoryManager = InventoryManager.getInstance();
         inventoryManager.setup(this);
 
-        commandManager = new CommandManager(this);
         gameManager = new GameManager(this);
 
         players = new ArrayList<>();
@@ -110,8 +108,8 @@ public class SuperLMS extends JavaPlugin implements MessageUtils {
                 if (gameManager.getStatus().equals(GameStatus.IDLE)) {
                     final Calendar C = new GregorianCalendar();
                     C.setTimeZone(TimeZone.getTimeZone("Europe/Bucharest"));
-                    final int hour = C.get(Calendar.HOUR);
-                    final int minute = C.get(Calendar.MINUTE);
+                    int hour = C.get(Calendar.HOUR_OF_DAY);
+                    int minute = C.get(Calendar.MINUTE);
 
                     if (hour == 9 && minute == 0) {
                         gameManager.waitForPlayers();
