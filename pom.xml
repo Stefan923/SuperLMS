@@ -6,7 +6,7 @@
 
     <groupId>me.stefan923</groupId>
     <artifactId>superlms</artifactId>
-    <version>0.0.0</version>
+    <version>0.0.1</version>
     <packaging>jar</packaging>
 
     <dependencies>

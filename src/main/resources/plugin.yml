@@ -1,5 +1,5 @@
 name: SuperLMS
-version: 0.0.0
+version: 0.0.1
 main: me.stefan923.superlms.SuperLMS
 description: Adds the Last Man Standing game to Minecraft.
 authors: [Stefan923]
