@@ -137,9 +137,7 @@ public class GameManager implements MessageUtils, SerializationUtils {
                 .replace("%winner%", winner.getName())
                 .replace("%time%", convertTime(System.currentTimeMillis() - startTime, language))));
 
-        System.out.println("Outa 1");
         removePlayer(winner);
-        System.out.println("Outa 2");
 
         ConsoleCommandSender consoleCommandSender = Bukkit.getConsoleSender();
 
@@ -187,7 +185,6 @@ public class GameManager implements MessageUtils, SerializationUtils {
         }
 
         instance.getPlayers().remove(player);
-        System.out.println("Outa 3 " + player.getName() + " " + instance.getPlayers().size());
         int playerCount = instance.getPlayers().size();
 
         if (player.isOnline()) {
