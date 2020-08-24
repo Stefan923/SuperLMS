@@ -63,6 +63,7 @@ public class SuperLMS extends JavaPlugin implements MessageUtils {
         pluginManager.registerEvents(new PlayerDeathListener(this), this);
         pluginManager.registerEvents(new PlayerDropItemListener(this), this);
         pluginManager.registerEvents(new PlayerQuitListener(this), this);
+        pluginManager.registerEvents(new PlayerRespawnListener(this), this);
         return i;
     }
 
