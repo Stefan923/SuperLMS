@@ -20,8 +20,11 @@ public class PlayerDeathListener implements Listener, MessageUtils {
         final Player player = event.getEntity().getPlayer();
 
         if (instance.getPlayers().contains(player)) {
+            event.setKeepInventory(true);
+            event.setKeepLevel(true);
+
             player.spigot().respawn();
-            instance.getGameManager().removePlayer(player);
+            event.setDeathMessage(null);
 
             instance.getGameManager().broadcastInGame(formatAll(instance.getLanguageManager().getConfig().getString("Game.Player Died").replace("%player_name%", player.getName())));
         }

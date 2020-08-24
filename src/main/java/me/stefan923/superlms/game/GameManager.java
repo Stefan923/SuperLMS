@@ -82,7 +82,7 @@ public class GameManager implements MessageUtils, SerializationUtils {
     }
 
     public void startGame() {
-        Bukkit.getScheduler().cancelTask(currentTaskID);
+        cancelCurrentTask();
 
         status = settings.getBoolean("Game.Grace Period.Enabled") ? GameStatus.GRACE : GameStatus.STARTED;
         startTime = System.currentTimeMillis();
@@ -137,8 +137,9 @@ public class GameManager implements MessageUtils, SerializationUtils {
                 .replace("%winner%", winner.getName())
                 .replace("%time%", convertTime(System.currentTimeMillis() - startTime, language))));
 
+        System.out.println("Outa 1");
         removePlayer(winner);
-        status = GameStatus.IDLE;
+        System.out.println("Outa 2");
 
         ConsoleCommandSender consoleCommandSender = Bukkit.getConsoleSender();
 
@@ -185,17 +186,21 @@ public class GameManager implements MessageUtils, SerializationUtils {
             return;
         }
 
+        instance.getPlayers().remove(player);
+        System.out.println("Outa 3 " + player.getName() + " " + instance.getPlayers().size());
         int playerCount = instance.getPlayers().size();
 
-        if (status.equals(GameStatus.STARTING) && playerCount < settings.getInt("Game.Minimum Player Count")) {
-            status = GameStatus.WAITING;
-            timer = settings.getInt("Game.Starting Counter");
-        }
-
-        if (player != null && player.isOnline()) {
+        if (player.isOnline()) {
             UUID playerUUID = player.getUniqueId();
             InventoryManager inventoryManager = instance.getInventoryManager();
             FileConfiguration inventoryConfig = inventoryManager.getConfig();
+
+            PlayerInventory playerInventory = player.getInventory();
+            playerInventory.clear();
+            playerInventory.setHelmet(null);
+            playerInventory.setChestplate(null);
+            playerInventory.setLeggings(null);
+            playerInventory.setBoots(null);
 
             try {
                 player.getInventory().setContents(itemStackArrayFromBase64(inventoryConfig.getString(playerUUID + ".inventory")));
@@ -221,7 +226,11 @@ public class GameManager implements MessageUtils, SerializationUtils {
                     .replace("%max_count%", String.valueOf(settings.getInt("Game.Maximum Player Count")))));
         }
 
-        instance.getPlayers().remove(player);
+        if (status.equals(GameStatus.STARTING) && playerCount < settings.getInt("Game.Minimum Player Count")) {
+            status = GameStatus.WAITING;
+            timer = settings.getInt("Game.Starting Counter");
+            return;
+        }
 
         if (playerCount == 1) {
             endGame();

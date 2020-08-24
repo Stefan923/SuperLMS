@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.inventory.PlayerInventory;
 
 public class EntityDamageListener implements Listener {
 
@@ -26,9 +27,21 @@ public class EntityDamageListener implements Listener {
         GameStatus status = instance.getGameManager().getStatus();
 
         final Player player = (Player) entity;
-        if (instance.getPlayers().contains(player) && (status.equals(GameStatus.WAITING) || status.equals(GameStatus.STARTING) || status.equals(GameStatus.GRACE))) {
-            event.setCancelled(true);
+        if (instance.getPlayers().contains(player)) {
+            if (status.equals(GameStatus.WAITING) || status.equals(GameStatus.STARTING) || status.equals(GameStatus.GRACE)) {
+                event.setCancelled(true);
+            }
+
+            if (player.getHealth() - event.getFinalDamage() <= 0 && status.equals(GameStatus.STARTED)) {
+                PlayerInventory playerInventory = player.getInventory();
+                playerInventory.clear();
+                playerInventory.setHelmet(null);
+                playerInventory.setChestplate(null);
+                playerInventory.setLeggings(null);
+                playerInventory.setBoots(null);
+            }
         }
+
     }
 
 }
