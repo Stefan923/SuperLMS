@@ -5,7 +5,6 @@ import me.stefan923.superlms.utils.MessageUtils;
 import me.stefan923.superlms.commands.AbstractCommand;
 import org.bukkit.command.CommandSender;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
