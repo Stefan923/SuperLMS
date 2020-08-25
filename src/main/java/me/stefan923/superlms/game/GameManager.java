@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -106,8 +107,9 @@ public class GameManager implements MessageUtils, SerializationUtils {
             ItemStack[] contents = itemStackArrayFromBase64(settings.getString("Game.Kit.Inventory"));
             ItemStack[] armorContents = itemStackArrayFromBase64(settings.getString("Game.Kit.Armor"));
 
+            BukkitScheduler scheduler = instance.getServer().getScheduler();
             instance.getPlayers().forEach(player -> {
-                player.teleport(arenaLocation);
+                scheduler.runTask(instance, () -> player.teleport(arenaLocation));
                 player.getInventory().setContents(contents);
                 player.getInventory().setArmorContents(armorContents);
             });
