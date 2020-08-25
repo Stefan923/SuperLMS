@@ -18,24 +18,31 @@ public class CommandJoin extends AbstractCommand implements MessageUtils {
 
     @Override
     protected ReturnType runCommand(SuperLMS instance, CommandSender sender, String... args) {
+        Player player = (Player) sender;
         FileConfiguration language = instance.getLanguageManager().getConfig();
         GameStatus gameStatus = instance.getGameManager().getStatus();
+
+        if (instance.getPlayers().contains(player)) {
+            sender.sendMessage(formatAll(language.getString("Command.Join.Already Joined")));
+            return ReturnType.SUCCESS;
+        }
+
         if (gameStatus.equals(GameStatus.GRACE) || gameStatus.equals(GameStatus.STARTED)) {
-            sender.sendMessage(formatAll(language.getString("Command.Join.Game Already Started")));
+            player.sendMessage(formatAll(language.getString("Command.Join.Game Already Started")));
             return ReturnType.SUCCESS;
         }
 
         if (gameStatus.equals(GameStatus.IDLE)) {
-            sender.sendMessage(formatAll(language.getString("Command.Join.Game Not Available")));
+            player.sendMessage(formatAll(language.getString("Command.Join.Game Not Available")));
             return ReturnType.SUCCESS;
         }
 
         if (instance.getPlayers().size() >= instance.getSettingsManager().getConfig().getInt("Game.Maximum Player Count")) {
-            sender.sendMessage(formatAll(language.getString("Command.Join.Game Is Full")));
+            player.sendMessage(formatAll(language.getString("Command.Join.Game Is Full")));
             return ReturnType.SUCCESS;
         }
 
-        instance.getGameManager().addPlayer((Player) sender);
+        instance.getGameManager().addPlayer(player);
         return ReturnType.SUCCESS;
     }
 
