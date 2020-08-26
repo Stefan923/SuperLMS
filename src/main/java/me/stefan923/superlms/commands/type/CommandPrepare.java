@@ -7,15 +7,13 @@ import me.stefan923.superlms.commands.AbstractCommand;
 import me.stefan923.superlms.utils.SerializationUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class CommandPrepare extends AbstractCommand implements MessageUtils, SerializationUtils {
 
     public CommandPrepare(AbstractCommand abstractCommand) {
-        super(abstractCommand, true, "prepare");
+        super(abstractCommand, false, "prepare");
     }
 
     @Override
