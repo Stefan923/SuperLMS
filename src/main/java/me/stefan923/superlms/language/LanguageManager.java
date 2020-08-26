@@ -41,6 +41,7 @@ public class LanguageManager {
         config.addDefault("Game.Waiting For Players", "&8(&3!&8) &fA &bLast Man Standing &fgame is waiting for players. Use &3/superlms join&f. &7(&b%current_count%&7/&3%max_count%&7)");
         config.addDefault("Game.Waiting.Player Joined", "&8(&3!&8) &a%player_name% &fjoined the game. &7(&b%current_count%&7/&3%max_count%&7)");
         config.addDefault("Game.Waiting.Player Quit", "&8(&3!&8) &c%player_name% &fquit the game. &7(&b%current_count%&7/&3%max_count%&7)");
+        config.addDefault("General.Must Be Player", "&8(&3!&8) &cYou must be a player to do this!");
         config.addDefault("General.Word Day", "day");
         config.addDefault("General.Word Days", "days");
         config.addDefault("General.Word Hour", "hour");
