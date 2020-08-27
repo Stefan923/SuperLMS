@@ -113,9 +113,7 @@ public class GameManager implements MessageUtils, SerializationUtils {
                 player.getInventory().setContents(contents);
                 player.getInventory().setArmorContents(armorContents);
             });
-            instance.getSpectators().forEach(player -> {
-                scheduler.runTask(instance, () -> player.teleport(arenaLocation));
-            });
+            instance.getSpectators().forEach(player -> scheduler.runTask(instance, () -> player.teleport(arenaLocation)));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -158,7 +156,7 @@ public class GameManager implements MessageUtils, SerializationUtils {
                 .replace("%time%", convertTime(System.currentTimeMillis() - startTime, language))));
 
         removePlayer(winner);
-        instance.getSpectators().forEach(player -> removeSpectator(player));
+        instance.getSpectators().forEach(this::removeSpectator);
 
         ConsoleCommandSender consoleCommandSender = Bukkit.getConsoleSender();
 
