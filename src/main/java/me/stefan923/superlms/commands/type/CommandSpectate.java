@@ -37,6 +37,7 @@ public class CommandSpectate extends AbstractCommand implements MessageUtils {
             return ReturnType.SUCCESS;
         }
 
+        player.sendMessage(formatAll(language.getString("Command.Spectate.Success")));
         instance.getGameManager().addSpectator(player);
         return ReturnType.SUCCESS;
     }
