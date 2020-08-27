@@ -54,8 +54,9 @@ public class SuperLMS extends JavaPlugin implements MessageUtils {
     }
 
     private Integer enableListeners() {
-        Integer i = 8;
+        Integer i = 9;
         PluginManager pluginManager = getServer().getPluginManager();
+        pluginManager.registerEvents(new EntityDamageByEntityListener(this), this);
         pluginManager.registerEvents(new EntityDamageListener(this), this);
         pluginManager.registerEvents(new FoodLevelChangeListener(this), this);
         pluginManager.registerEvents(new PlayerCommandPreprocessListener(this), this);
