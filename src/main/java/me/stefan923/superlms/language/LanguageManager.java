@@ -1,6 +1,8 @@
 package me.stefan923.superlms.language;
 
 import me.stefan923.superlms.SuperLMS;
+import me.stefan923.superlms.commands.AbstractCommand;
+import me.stefan923.superlms.game.GameStatus;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -32,6 +34,10 @@ public class LanguageManager {
         config.addDefault("Command.Prepare.Success", "&8(&3!&8) &fThe game has been &bsuccessfully &fprepared.");
         config.addDefault("Command.SetKit.Success", "&8(&3!&8) &fYou have successfully changed the game's &bstarting inventory&f.");
         config.addDefault("Command.SetLocation.Success", "&8(&3!&8) &fYou have successfully changed &b%location% &flocation.");
+        config.addDefault("Command.Spectate.Already Joined", "&8(&3!&8) &cYou have already joined the game.");
+        config.addDefault("Command.Spectate.Already Spectating", "&8(&3!&8) &cYou are already spectating the game.");
+        config.addDefault("Command.Spectate.Game Not Available", "&8(&3!&8) &cThere is no arena available.");
+        config.addDefault("Command.Spectate.Success", "&8(&3!&8) &fNow, you are &bspectating &fa Last Man Standing game.");
         config.addDefault("Game.Finished", "&8(&3!&8) &fThe game has been won by &b%winner% &fin &3%time%&f.");
         config.addDefault("Game.Grace Period Ended", "&8(&3!&8) &fThe &bgrace &fperiod has expired. Now, you can fight other players.");
         config.addDefault("Game.Grace Period Ending", "&8(&3!&8) &fThe &bgrace &fperiod will expire in &3%time%&f.");
