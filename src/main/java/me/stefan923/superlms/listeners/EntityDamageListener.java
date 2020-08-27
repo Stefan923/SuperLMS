@@ -25,8 +25,13 @@ public class EntityDamageListener implements Listener {
         }
 
         GameStatus status = instance.getGameManager().getStatus();
-
         final Player player = (Player) entity;
+
+        if (instance.getSpectators().contains(player)) {
+            event.setCancelled(true);
+            return;
+        }
+
         if (instance.getPlayers().contains(player)) {
             if (status.equals(GameStatus.WAITING) || status.equals(GameStatus.STARTING) || status.equals(GameStatus.GRACE)) {
                 event.setCancelled(true);

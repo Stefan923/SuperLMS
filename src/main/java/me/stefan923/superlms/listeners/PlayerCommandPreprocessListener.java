@@ -19,7 +19,7 @@ public class PlayerCommandPreprocessListener implements Listener, MessageUtils {
     public void onPlayerCommandPreprocess(final PlayerCommandPreprocessEvent event) {
         final Player player = event.getPlayer();
 
-        if (instance.getPlayers().contains(player)) {
+        if (instance.getPlayers().contains(player) || instance.getSpectators().contains(player)) {
             for (final String command : instance.getSettingsManager().getConfig().getStringList("Game Settings.Blocked Commands")) {
                 if (event.getMessage().contains("/" + command)) {
                     player.sendMessage(formatAll(instance.getLanguageManager().getConfig().getString("General.Blocked Command")));

@@ -18,7 +18,7 @@ public class PlayerDropItemListener implements Listener {
     public void onPlayerDropItem(final PlayerDropItemEvent event) {
         final Player player = event.getPlayer();
 
-        if (instance.getPlayers().contains(player)) {
+        if (instance.getPlayers().contains(player) || instance.getSpectators().contains(player)) {
             event.setCancelled(true);
         }
     }

@@ -113,6 +113,9 @@ public class GameManager implements MessageUtils, SerializationUtils {
                 player.getInventory().setContents(contents);
                 player.getInventory().setArmorContents(armorContents);
             });
+            instance.getSpectators().forEach(player -> {
+                scheduler.runTask(instance, () -> player.teleport(arenaLocation));
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -155,6 +158,7 @@ public class GameManager implements MessageUtils, SerializationUtils {
                 .replace("%time%", convertTime(System.currentTimeMillis() - startTime, language))));
 
         removePlayer(winner);
+        instance.getSpectators().forEach(player -> removeSpectator(player));
 
         ConsoleCommandSender consoleCommandSender = Bukkit.getConsoleSender();
 
@@ -253,14 +257,40 @@ public class GameManager implements MessageUtils, SerializationUtils {
         }
     }
 
+    public void addSpectator(Player player) {
+        instance.getSpectators().add(player);
+
+        Bukkit.getOnlinePlayers().forEach(targetPlayer -> targetPlayer.hidePlayer(player));
+        if (status.equals(GameStatus.WAITING) || status.equals(GameStatus.STARTING)) {
+            player.teleport(deserializeLocation("Game.Locations.Lobby"));
+        } else {
+            player.teleport(deserializeLocation("Game.Locations.Arena"));
+        }
+    }
+
+    public void removeSpectator(Player player) {
+        instance.getSpectators().remove(player);
+
+        player.teleport(deserializeLocation("Game.Locations.Spawn"));
+        Bukkit.getOnlinePlayers().forEach(targetPlayer -> targetPlayer.showPlayer(player));
+    }
+
     public void broadcastInGame(String message) {
         for (Player player : instance.getPlayers()) {
+            player.sendMessage(message);
+        }
+
+        for (Player player : instance.getSpectators()) {
             player.sendMessage(message);
         }
     }
 
     private void soundInGame(Sound sound) {
         for (Player player : instance.getPlayers()) {
+            player.playSound(player.getEyeLocation(), sound, 1, 1);
+        }
+
+        for (Player player : instance.getSpectators()) {
             player.playSound(player.getEyeLocation(), sound, 1, 1);
         }
     }

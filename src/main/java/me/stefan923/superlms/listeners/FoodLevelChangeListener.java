@@ -25,7 +25,7 @@ public class FoodLevelChangeListener implements Listener {
 
         final Player player = (Player) entity;
         GameStatus gameStatus = instance.getGameManager().getStatus();
-        if (instance.getPlayers().contains(player) && (gameStatus.equals(GameStatus.WAITING) || gameStatus.equals(GameStatus.STARTING) || gameStatus.equals(GameStatus.GRACE))) {
+        if ((instance.getPlayers().contains(player) && (gameStatus.equals(GameStatus.WAITING) || gameStatus.equals(GameStatus.STARTING) || gameStatus.equals(GameStatus.GRACE))) || instance.getSpectators().contains(player)) {
             player.setFoodLevel(20);
             event.setCancelled(true);
         }
