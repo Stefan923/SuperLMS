@@ -24,6 +24,7 @@ public class SuperLMS extends JavaPlugin implements MessageUtils {
     private GameManager gameManager;
 
     public static ArrayList<Player> players;
+    public static ArrayList<Player> spectators;
 
     @Override
     public void onEnable() {
@@ -53,13 +54,14 @@ public class SuperLMS extends JavaPlugin implements MessageUtils {
     }
 
     private Integer enableListeners() {
-        Integer i = 6;
+        Integer i = 8;
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new EntityDamageListener(this), this);
         pluginManager.registerEvents(new FoodLevelChangeListener(this), this);
         pluginManager.registerEvents(new PlayerCommandPreprocessListener(this), this);
         pluginManager.registerEvents(new PlayerDeathListener(this), this);
         pluginManager.registerEvents(new PlayerDropItemListener(this), this);
+        pluginManager.registerEvents(new PlayerPickupItemListener(this), this);
         pluginManager.registerEvents(new PlayerQuitListener(this), this);
         pluginManager.registerEvents(new PlayerRespawnListener(this), this);
         return i;
@@ -100,6 +102,10 @@ public class SuperLMS extends JavaPlugin implements MessageUtils {
 
     public ArrayList<Player> getPlayers() {
         return players;
+    }
+
+    public ArrayList<Player> getSpectators() {
+        return spectators;
     }
 
     public void timeTask() {
