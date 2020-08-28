@@ -19,16 +19,20 @@ public class CommandExit extends AbstractCommand implements MessageUtils {
     @Override
     protected ReturnType runCommand(SuperLMS instance, CommandSender sender, String... args) {
         FileConfiguration language = instance.getLanguageManager().getConfig();
-        GameStatus gameStatus = instance.getGameManager().getStatus();
 
         Player player = (Player) sender;
 
-        if (!instance.getPlayers().contains(player)) {
-            sender.sendMessage(formatAll(language.getString("Command.Exit.Not In Game")));
+        if (instance.getPlayers().contains(player)) {
+            instance.getGameManager().removePlayer(player);
             return ReturnType.SUCCESS;
         }
 
-        instance.getGameManager().removePlayer(player);
+        if (instance.getSpectators().contains(player)) {
+            instance.getGameManager().removeSpectator(player);
+            return ReturnType.SUCCESS;
+        }
+
+        sender.sendMessage(formatAll(language.getString("Command.Exit.Not In Game")));
         return ReturnType.SUCCESS;
     }
 
