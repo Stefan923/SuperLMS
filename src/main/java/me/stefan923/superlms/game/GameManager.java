@@ -260,16 +260,16 @@ public class GameManager implements MessageUtils, SerializationUtils {
 
         Bukkit.getOnlinePlayers().forEach(targetPlayer -> targetPlayer.hidePlayer(player));
         if (status.equals(GameStatus.WAITING) || status.equals(GameStatus.STARTING)) {
-            player.teleport(deserializeLocation("Game.Locations.Lobby"));
+            player.teleport(deserializeLocation(settings.getString("Game.Locations.Lobby")));
         } else {
-            player.teleport(deserializeLocation("Game.Locations.Arena"));
+            player.teleport(deserializeLocation(settings.getString("Game.Locations.Arena")));
         }
     }
 
     public void removeSpectator(Player player) {
         instance.getSpectators().remove(player);
 
-        player.teleport(deserializeLocation("Game.Locations.Spawn"));
+        player.teleport(deserializeLocation(settings.getString("Game.Locations.Spawn")));
         Bukkit.getOnlinePlayers().forEach(targetPlayer -> targetPlayer.showPlayer(player));
     }
 
