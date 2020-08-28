@@ -3,6 +3,7 @@ package me.stefan923.superlms.game;
 import me.stefan923.superlms.SuperLMS;
 import me.stefan923.superlms.settings.InventoryManager;
 import me.stefan923.superlms.utils.MessageUtils;
+import me.stefan923.superlms.utils.PlayerUtils;
 import me.stefan923.superlms.utils.SerializationUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -18,7 +19,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import java.io.IOException;
 import java.util.UUID;
 
-public class GameManager implements MessageUtils, SerializationUtils {
+public class GameManager implements MessageUtils, SerializationUtils, PlayerUtils {
 
     private final SuperLMS instance;
 
@@ -174,7 +175,7 @@ public class GameManager implements MessageUtils, SerializationUtils {
 
         inventoryManager.getConfig().set(playerUUID + ".inventory", itemStackArrayToBase64(playerInventory.getContents()));
         inventoryManager.getConfig().set(playerUUID + ".armor", itemStackArrayToBase64(playerInventory.getArmorContents()));
-        inventoryManager.getConfig().set(playerUUID + ".experience", (double) player.getExp());
+        inventoryManager.getConfig().set(playerUUID + ".experience", getTotalExperience(player));
         inventoryManager.save();
 
         playerInventory.clear();
@@ -182,7 +183,7 @@ public class GameManager implements MessageUtils, SerializationUtils {
         playerInventory.setChestplate(null);
         playerInventory.setLeggings(null);
         playerInventory.setBoots(null);
-        player.setExp(0.0f);
+        setTotalExperience(player, 0);
         player.setHealth(player.getMaxHealth());
         player.setFoodLevel(20);
 
@@ -225,7 +226,7 @@ public class GameManager implements MessageUtils, SerializationUtils {
                 e.printStackTrace();
             }
             player.updateInventory();
-            player.setExp((float) inventoryConfig.getDouble(playerUUID + ".experience"));
+            setTotalExperience(player, inventoryConfig.getInt(playerUUID + ".experience"));
 
             player.teleport(deserializeLocation(settings.getString("Game.Locations.Spawn")));
             inventoryConfig.set(playerUUID + ".inventory", null);
