@@ -28,5 +28,9 @@ public class PlayerQuitListener implements Listener, MessageUtils {
                 instance.getGameManager().broadcastInGame(formatAll(instance.getLanguageManager().getConfig().getString("Game.Player Died").replace("%player_name%", player.getName())));
             }
         }
+
+        if (instance.getSpectators().contains(player)) {
+            instance.getGameManager().removeSpectator(player);
+        }
     }
 }
