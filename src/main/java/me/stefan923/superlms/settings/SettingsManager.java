@@ -32,6 +32,8 @@ public class SettingsManager {
         config.addDefault("Game.Grace Period.Time In Seconds", 10);
         config.addDefault("Game.Winner Rewards", Arrays.asList("give %player_name% minecraft:diamond 16", "give %player_name% minecraft:iron_ingot 32"));
         config.addDefault("Game.Blocked Commands", Arrays.asList("shop", "spawn", "ec", "enderchest", "echest"));
+        config.addDefault("Arena Auto-Prepare.Enable", true);
+        config.addDefault("Arena Auto-Prepare.Hours", Arrays.asList("9:00", "12:00", "15:00", "18:00", "21:00", "0:00"));
         config.options().copyDefaults(true);
         save();
     }

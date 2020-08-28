@@ -8,6 +8,7 @@ import me.stefan923.superlms.listeners.*;
 import me.stefan923.superlms.settings.InventoryManager;
 import me.stefan923.superlms.settings.SettingsManager;
 import me.stefan923.superlms.utils.MessageUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -42,6 +43,7 @@ public class SuperLMS extends JavaPlugin implements MessageUtils {
         gameManager = new GameManager(this);
 
         players = new ArrayList<>();
+        spectators = new ArrayList<>();
 
         sendLogger("&8&l> &7&m------- &8&l( &3&lSuperLMS &b&lby Stefan923 &8&l) &7&m------- &8&l<");
         sendLogger("&b   Plugin has been initialized.");
@@ -50,7 +52,9 @@ public class SuperLMS extends JavaPlugin implements MessageUtils {
         sendLogger("&b   Enabled commands: &3" + enableCommands());
         sendLogger("&8&l> &7&m------- &8&l( &3&lSuperLMS &b&lby Stefan923 &8&l) &7&m------- &8&l<");
 
-        timeTask();
+        if (settingsManager.getConfig().getBoolean("Arena Auto-Prepare.Enable")) {
+            timeTask();
+        }
     }
 
     private Integer enableListeners() {
@@ -110,30 +114,38 @@ public class SuperLMS extends JavaPlugin implements MessageUtils {
     }
 
     public void timeTask() {
-        new BukkitRunnable() {
-            public void run() {
-                if (gameManager.getStatus().equals(GameStatus.IDLE)) {
-                    final Calendar C = new GregorianCalendar();
-                    C.setTimeZone(TimeZone.getTimeZone("Europe/Bucharest"));
-                    int hour = C.get(Calendar.HOUR_OF_DAY);
-                    int minute = C.get(Calendar.MINUTE);
+        long nextGame = 0;
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTimeZone(TimeZone.getTimeZone("Europe/Bucharest"));
+        calendar.set(Calendar.SECOND, 0);
 
-                    if (hour == 9 && minute == 0) {
-                        gameManager.waitForPlayers();
-                    } else if (hour == 12 && minute == 0) {
-                        gameManager.waitForPlayers();
-                    } else if (hour == 15 && minute == 0) {
-                        gameManager.waitForPlayers();
-                    } else if (hour == 18 && minute == 0) {
-                        gameManager.waitForPlayers();
-                    } else if (hour == 21 && minute == 0) {
-                        gameManager.waitForPlayers();
-                    } else if (hour == 0 && minute == 0) {
-                        gameManager.waitForPlayers();
-                    }
+        while (nextGame == 0) {
+            for (String time : settingsManager.getConfig().getStringList("Arena Auto-Prepare.Hours")) {
+                String[] tempTime = time.split(":");
+                calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(tempTime[0]));
+                calendar.set(Calendar.MINUTE, Integer.parseInt(tempTime[1]));
+
+                long duration = calendar.getTimeInMillis() - System.currentTimeMillis();
+                if (duration > 0 && (nextGame == 0 || duration < nextGame)) {
+                    nextGame = duration;
+                    System.out.println(nextGame);
                 }
             }
-        }.runTaskTimer(this, 20L, 20L);
+            calendar.add(Calendar.MILLISECOND, 86400000); // adding 1 day
+        }
+
+        nextGame = ((nextGame / 1000) + 1) * 20; // converting to ticks
+
+        Bukkit.getScheduler().scheduleAsyncDelayedTask(this, new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (gameManager.getStatus().equals(GameStatus.IDLE)) {
+                    gameManager.waitForPlayers();
+                }
+
+                timeTask();
+            }
+        }, nextGame);
     }
 
     @Override
