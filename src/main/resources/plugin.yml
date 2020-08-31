@@ -1,5 +1,5 @@
 name: SuperLMS
-version: 0.2.2
+version: 0.3.0
 main: me.stefan923.superlms.SuperLMS
 description: Adds the Last Man Standing game to Minecraft.
 authors: [Stefan923]
@@ -11,8 +11,8 @@ commands:
 
 permissions:
   superlms.admin:
-    description: Acces to powerfull commands, like reload, configuration commands.
+    description: Access to powerfull commands, like reload, configuration commands.
     default: op
   superlms.play:
-    description: Acces to play Last Man Standing games.
+    description: Access to play Last Man Standing games.
     default: op
