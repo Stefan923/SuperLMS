@@ -38,6 +38,8 @@ public class LanguageManager {
         config.addDefault("Command.Spectate.Already Spectating", "&8(&3!&8) &cYou are already spectating the game.");
         config.addDefault("Command.Spectate.Game Not Available", "&8(&3!&8) &cThere is no arena available.");
         config.addDefault("Command.Spectate.Success", "&8(&3!&8) &fNow, you are &bspectating &fa Last Man Standing game.");
+        config.addDefault("Command.Stop.Game Not Available", "&8(&3!&8) &cThere is no arena available.");
+        config.addDefault("Command.Stop.Success", "&8(&3!&8) &fThe game has been &cinterrupted&f by you.");
         config.addDefault("Game.Finished", "&8(&3!&8) &fThe game has been won by &b%winner% &fin &3%time%&f.");
         config.addDefault("Game.Grace Period Ended", "&8(&3!&8) &fThe &bgrace &fperiod has expired. Now, you can fight other players.");
         config.addDefault("Game.Grace Period Ending", "&8(&3!&8) &fThe &bgrace &fperiod will expire in &3%time%&f.");

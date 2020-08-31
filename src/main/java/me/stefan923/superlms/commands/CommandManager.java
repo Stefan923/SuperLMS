@@ -36,6 +36,7 @@ public class CommandManager implements CommandExecutor, MessageUtils {
         addCommand(new CommandSetKit(commandSuperLMS));
         addCommand(new CommandSetLocation(commandSuperLMS));
         addCommand(new CommandSpectate(commandSuperLMS));
+        addCommand(new CommandStop(commandSuperLMS));
 
         for (AbstractCommand abstractCommand : commands) {
             if (abstractCommand.getParent() != null) continue;

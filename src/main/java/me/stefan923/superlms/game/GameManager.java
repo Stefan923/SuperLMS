@@ -166,6 +166,13 @@ public class GameManager implements MessageUtils, SerializationUtils, PlayerUtil
         }
     }
 
+    public void forceEndGame() {
+        status = GameStatus.IDLE;
+
+        instance.getPlayers().forEach(this::removePlayer);
+        instance.getSpectators().forEach(this::removeSpectator);
+    }
+
     public void addPlayer(Player player) {
         instance.getPlayers().add(player);
 
@@ -249,10 +256,12 @@ public class GameManager implements MessageUtils, SerializationUtils, PlayerUtil
             return;
         }
 
-        if (playerCount == 1) {
-            endGame();
-        } else if (playerCount < 1) {
-            status = GameStatus.IDLE;
+        if (!status.equals(GameStatus.IDLE)) {
+            if (playerCount == 1) {
+                endGame();
+            } else if (playerCount < 1) {
+                status = GameStatus.IDLE;
+            }
         }
     }
 
