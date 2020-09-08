@@ -49,7 +49,7 @@ public class CommandSpectate extends AbstractCommand implements MessageUtils {
 
     @Override
     public String getPermissionNode() {
-        return "superlms.play";
+        return "superlms.spectate";
     }
 
     @Override
