@@ -157,7 +157,9 @@ public class GameManager implements MessageUtils, SerializationUtils, PlayerUtil
                 .replace("%time%", convertTime(System.currentTimeMillis() - startTime, language))));
 
         removePlayer(winner);
-        instance.getSpectators().forEach(this::removeSpectator);
+        for (Player spectator : instance.getSpectators()) {
+            removeSpectator(spectator);
+        }
 
         ConsoleCommandSender consoleCommandSender = Bukkit.getConsoleSender();
 
