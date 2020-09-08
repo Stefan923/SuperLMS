@@ -28,6 +28,6 @@ This plugin has no mandatory or soft dependencies.
 4. Use **/superLMS setKit** to set your current inventory as starting kit for this game.
 5. Check the **settings.yml** file to change other game settings.
 
-### Wiki
+## Wiki
 
 You have to visit plugin's wiki page if you want to see a full list of commands, permissions, placeholders and more.
