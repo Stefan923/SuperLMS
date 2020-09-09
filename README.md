@@ -24,7 +24,7 @@ This plugin has no mandatory or soft dependencies.
 
 1. Use **/superLMS setLocation spawn** to set your current location as spawn location, where the player will be teleported after leaving the game.
 2. Use **/superLMS setLocation lobby** to set your current location as lobby location, where the player will be teleported when joining the game.
-3. Use **/superLMS setLocation arena** to set your current location as lobby location, where the player will be teleported when the game starts.
+3. Use **/superLMS setLocation arena** to set your current location as arena location, where the player will be teleported when the game starts.
 4. Use **/superLMS setKit** to set your current inventory as starting kit for this game.
 5. Check the **settings.yml** file to change other game settings.
 
