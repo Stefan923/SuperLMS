@@ -171,8 +171,14 @@ public class GameManager implements MessageUtils, SerializationUtils, PlayerUtil
     public void forceEndGame() {
         status = GameStatus.IDLE;
 
-        instance.getPlayers().forEach(this::removePlayer);
-        instance.getSpectators().forEach(this::removeSpectator);
+        for (Player player : instance.getPlayers()) {
+            removePlayer(player);
+        }
+        for (Player spectator : instance.getSpectators()) {
+            removeSpectator(spectator);
+        }
+
+        cancelCurrentTask();
     }
 
     public void addPlayer(Player player) {

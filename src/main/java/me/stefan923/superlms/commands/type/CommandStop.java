@@ -20,14 +20,13 @@ public class CommandStop extends AbstractCommand implements MessageUtils, Serial
     protected ReturnType runCommand(SuperLMS instance, CommandSender sender, String... args) {
         FileConfiguration language = instance.getLanguageManager().getConfig();
 
-        if (!instance.getGameManager().getStatus().equals(GameStatus.IDLE)) {
+        if (instance.getGameManager().getStatus().equals(GameStatus.IDLE)) {
             sender.sendMessage(formatAll(language.getString("Command.Stop.Game Not Available")));
             return ReturnType.SUCCESS;
         }
 
         instance.getGameManager().forceEndGame();
         sender.sendMessage(formatAll(language.getString("Command.Stop.Success")));
-        instance.getGameManager().waitForPlayers();
 
         return ReturnType.SUCCESS;
     }
