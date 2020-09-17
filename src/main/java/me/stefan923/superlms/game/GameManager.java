@@ -17,6 +17,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.UUID;
 
 public class GameManager implements MessageUtils, SerializationUtils, PlayerUtils {
@@ -170,12 +171,7 @@ public class GameManager implements MessageUtils, SerializationUtils, PlayerUtil
                 .replace("%time%", convertTime(System.currentTimeMillis() - startTime, language))));
 
         removePlayer(winner);
-        Bukkit.getScheduler().runTask(instance, () -> {
-            for (Player spectator : instance.getSpectators()) {
-                removeSpectator(spectator);
-            }
-        });
-
+        removeAllSpectators();
 
         ConsoleCommandSender consoleCommandSender = Bukkit.getConsoleSender();
 
@@ -187,14 +183,8 @@ public class GameManager implements MessageUtils, SerializationUtils, PlayerUtil
     public void forceEndGame() {
         status = GameStatus.IDLE;
 
-        Bukkit.getScheduler().runTask(instance, () -> {
-            for (Player player : instance.getPlayers()) {
-                removePlayer(player);
-            }
-            for (Player spectator : instance.getSpectators()) {
-                removeSpectator(spectator);
-            }
-        });
+        removeAllPlayers();
+        removeAllSpectators();
 
         cancelCurrentTask();
     }
@@ -292,6 +282,41 @@ public class GameManager implements MessageUtils, SerializationUtils, PlayerUtil
         }
     }
 
+    public void removeAllPlayers() {
+        for (Iterator<Player> iterator = instance.getPlayers().iterator(); iterator.hasNext(); ) {
+            Player player = iterator.next();
+
+            UUID playerUUID = player.getUniqueId();
+            InventoryManager inventoryManager = instance.getInventoryManager();
+            FileConfiguration inventoryConfig = inventoryManager.getConfig();
+
+            PlayerInventory playerInventory = player.getInventory();
+            playerInventory.clear();
+            playerInventory.setHelmet(null);
+            playerInventory.setChestplate(null);
+            playerInventory.setLeggings(null);
+            playerInventory.setBoots(null);
+
+            try {
+                player.getInventory().setContents(itemStackArrayFromBase64(inventoryConfig.getString(playerUUID + ".inventory")));
+                player.getInventory().setArmorContents(itemStackArrayFromBase64(inventoryConfig.getString(playerUUID + ".armor")));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            player.updateInventory();
+            setTotalExperience(player, inventoryConfig.getInt(playerUUID + ".experience"));
+
+            player.teleport(deserializeLocation(settings.getString("Game.Locations.Spawn")));
+            inventoryConfig.set(playerUUID + ".inventory", null);
+            inventoryConfig.set(playerUUID + ".armor", null);
+            inventoryConfig.set(playerUUID + ".experience", null);
+            inventoryConfig.set(String.valueOf(playerUUID), null);
+            inventoryManager.save();
+
+            iterator.remove();
+        }
+    }
+
     public void addSpectator(Player player) {
         instance.getSpectators().add(player);
 
@@ -310,6 +335,16 @@ public class GameManager implements MessageUtils, SerializationUtils, PlayerUtil
 
         player.teleport(deserializeLocation(settings.getString("Game.Locations.Spawn")));
         Bukkit.getOnlinePlayers().forEach(targetPlayer -> targetPlayer.showPlayer(player));
+    }
+
+    public void removeAllSpectators() {
+        for (Iterator<Player> iterator = instance.getSpectators().iterator(); iterator.hasNext(); ) {
+            Player spectator = iterator.next();
+            spectator.teleport(deserializeLocation(settings.getString("Game.Locations.Spawn")));
+            Bukkit.getOnlinePlayers().forEach(targetPlayer -> targetPlayer.showPlayer(spectator));
+
+            iterator.remove();
+        }
     }
 
     public void broadcastInGame(String message) {
