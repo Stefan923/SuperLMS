@@ -199,6 +199,7 @@ public class GameManager implements MessageUtils, SerializationUtils, PlayerUtil
         playerInventory.setLeggings(null);
         playerInventory.setBoots(null);
         setTotalExperience(player, 0);
+        player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
         player.setHealth(player.getMaxHealth());
         player.setFoodLevel(20);
 
@@ -275,6 +276,8 @@ public class GameManager implements MessageUtils, SerializationUtils, PlayerUtil
 
     public void addSpectator(Player player) {
         instance.getSpectators().add(player);
+
+        player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
 
         Bukkit.getOnlinePlayers().forEach(targetPlayer -> targetPlayer.hidePlayer(player));
         if (status.equals(GameStatus.WAITING) || status.equals(GameStatus.STARTING)) {
