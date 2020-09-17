@@ -170,9 +170,12 @@ public class GameManager implements MessageUtils, SerializationUtils, PlayerUtil
                 .replace("%time%", convertTime(System.currentTimeMillis() - startTime, language))));
 
         removePlayer(winner);
-        for (Player spectator : instance.getSpectators()) {
-            removeSpectator(spectator);
-        }
+        Bukkit.getScheduler().runTask(instance, () -> {
+            for (Player spectator : instance.getSpectators()) {
+                removeSpectator(spectator);
+            }
+        });
+
 
         ConsoleCommandSender consoleCommandSender = Bukkit.getConsoleSender();
 
@@ -184,12 +187,14 @@ public class GameManager implements MessageUtils, SerializationUtils, PlayerUtil
     public void forceEndGame() {
         status = GameStatus.IDLE;
 
-        for (Player player : instance.getPlayers()) {
-            removePlayer(player);
-        }
-        for (Player spectator : instance.getSpectators()) {
-            removeSpectator(spectator);
-        }
+        Bukkit.getScheduler().runTask(instance, () -> {
+            for (Player player : instance.getPlayers()) {
+                removePlayer(player);
+            }
+            for (Player spectator : instance.getSpectators()) {
+                removeSpectator(spectator);
+            }
+        });
 
         cancelCurrentTask();
     }
