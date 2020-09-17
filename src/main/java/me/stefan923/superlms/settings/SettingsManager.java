@@ -34,6 +34,8 @@ public class SettingsManager {
         config.addDefault("Game.Blocked Commands", Arrays.asList("shop", "spawn", "ec", "enderchest", "echest"));
         config.addDefault("Arena Auto-Prepare.Enable", true);
         config.addDefault("Arena Auto-Prepare.Hours", Arrays.asList("9:00", "12:00", "15:00", "18:00", "21:00", "0:00"));
+        config.addDefault("Arena Auto-Stop.Enable", true);
+        config.addDefault("Arena Auto-Stop.After X Seconds", 600);
         config.options().copyDefaults(true);
         save();
     }

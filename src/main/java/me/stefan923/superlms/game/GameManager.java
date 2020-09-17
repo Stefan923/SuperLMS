@@ -29,6 +29,7 @@ public class GameManager implements MessageUtils, SerializationUtils, PlayerUtil
     private GameStatus status;
 
     private int timer;
+    private int stopTimer;
     private long startTime;
     private int currentTaskID;
 
@@ -41,6 +42,7 @@ public class GameManager implements MessageUtils, SerializationUtils, PlayerUtil
         this.language = instance.getLanguageManager().getConfig();
 
         this.status = GameStatus.IDLE;
+        this.stopTimer = -1;
 
         // Sound names changed, make it compatible with both versions
         Sound clickSound = null;
@@ -61,6 +63,9 @@ public class GameManager implements MessageUtils, SerializationUtils, PlayerUtil
     public void waitForPlayers() {
         status = GameStatus.WAITING;
         timer = settings.getInt("Game.Starting Counter");
+        if (settings.getBoolean("Arena Auto-Stop.Enable"))
+            stopTimer = settings.getInt("Arena Auto-Stop.After X Seconds");
+
         currentTaskID = instance.getServer().getScheduler().scheduleAsyncRepeatingTask(instance, new BukkitRunnable() {
             private int announceTimer = 30;
 
@@ -69,6 +74,14 @@ public class GameManager implements MessageUtils, SerializationUtils, PlayerUtil
                 if (status.equals(GameStatus.IDLE)) {
                     cancelCurrentTask();
                 }
+
+                if (stopTimer == 0) {
+                    forceEndGame();
+                }
+                if (stopTimer != -1) {
+                    --stopTimer;
+                }
+
                 if (status.equals(GameStatus.WAITING) && announceTimer++ == 30) {
                     announceTimer = 0;
                     Bukkit.broadcastMessage(formatAll(instance.getLanguageManager().getConfig().getString("Game.Waiting For Players")
