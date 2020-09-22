@@ -34,11 +34,17 @@ public class CommandSuperLMS extends AbstractCommand implements MessageUtils {
     protected List<String> onTab(SuperLMS instance, CommandSender sender, String... args) {
         if (args.length == 1) {
             List<String> list = new ArrayList<>();
-            if (sender.hasPermission("superlms.play")) {
-                list.addAll(Stream.of("exit", "join", "spectate").filter(string -> string.startsWith(args[0].toLowerCase())).collect(Collectors.toList()));
+            if (sender.hasPermission("superlms.exit") && "exit".startsWith(args[0].toLowerCase())) {
+                list.add("exit");
+            }
+            if (sender.hasPermission("superlms.join") && "join".startsWith(args[0].toLowerCase())) {
+                list.add("join");
+            }
+            if (sender.hasPermission("superlms.spectate") && "spectate".startsWith(args[0].toLowerCase())) {
+                list.add("spectate");
             }
             if (sender.hasPermission("superlms.admin")) {
-                list.addAll(Stream.of("prepare", "reload", "setkit", "setlocation", "stop").filter(string -> string.startsWith(args[0].toLowerCase())).collect(Collectors.toList()));
+                list.addAll(Stream.of("forcestart", "prepare", "reload", "setkit", "setlocation", "stop").filter(string -> string.startsWith(args[0].toLowerCase())).collect(Collectors.toList()));
             }
             return list.isEmpty() ? null : list;
         }
