@@ -26,6 +26,10 @@ public class LanguageManager {
 
         config.options().header("SuperLMS by Stefan923\n");
         config.addDefault("Command.Exit.Not In Game", "&8(&3!&8) &cYou aren't in a Last Man Standing game.");
+        config.addDefault("Command.ForceStart.Game Already Started", "&8(&3!&8) &cThe game has already started.");
+        config.addDefault("Command.ForceStart.Game Not Available", "&8(&3!&8) &cThere is no arena available.");
+        config.addDefault("Command.ForceStart.Not Enough Players", "&8(&3!&8) &cThere must be at least &42 players &cto start the game.");
+        config.addDefault("Command.ForceStart.Success", "&8(&3!&8) &fThe game has been &bforced&f to start.");
         config.addDefault("Command.Join.Already Joined", "&8(&3!&8) &cYou have already joined the game.");
         config.addDefault("Command.Join.Game Already Started", "&8(&3!&8) &cThe game has already started.");
         config.addDefault("Command.Join.Game Is Full", "&8(&3!&8) &cThe game is full.");

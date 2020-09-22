@@ -17,12 +17,11 @@ import java.util.List;
 public class CommandManager implements CommandExecutor, MessageUtils {
 
     private static final List<AbstractCommand> commands = new ArrayList<>();
-    private SuperLMS plugin;
-    private TabManager tabManager;
+    private final SuperLMS plugin;
 
     public CommandManager(SuperLMS plugin) {
         this.plugin = plugin;
-        this.tabManager = new TabManager(this);
+        TabManager tabManager = new TabManager(this);
 
         FileConfiguration settings = plugin.getSettingsManager().getConfig();
 
@@ -30,6 +29,7 @@ public class CommandManager implements CommandExecutor, MessageUtils {
         AbstractCommand commandSuperLMS = addCommand(new CommandSuperLMS());
 
         addCommand(new CommandExit(commandSuperLMS));
+        addCommand(new CommandForceStart(commandSuperLMS));
         addCommand(new CommandJoin(commandSuperLMS));
         addCommand(new CommandPrepare(commandSuperLMS));
         addCommand(new CommandReload(commandSuperLMS));
