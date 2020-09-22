@@ -1,8 +1,14 @@
 package me.stefan923.superlms.utils;
 
+import me.stefan923.superlms.settings.InventoryManager;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.PlayerInventory;
 
-public interface PlayerUtils {
+import java.io.IOException;
+import java.util.UUID;
+
+public interface PlayerUtils extends SerializationUtils {
 
     default int getTotalExperience(int level) {
         int xp = 0;
@@ -45,6 +51,54 @@ public interface PlayerUtils {
         player.setLevel(level);
         player.setExp(0);
         player.giveExp(xp);
+    }
+
+    default void resetPlayerData(Player player) {
+        PlayerInventory playerInventory = player.getInventory();
+
+        playerInventory.clear();
+        playerInventory.setHelmet(null);
+        playerInventory.setChestplate(null);
+        playerInventory.setLeggings(null);
+        playerInventory.setBoots(null);
+        player.updateInventory();
+
+        player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
+        setTotalExperience(player, 0);
+        player.setHealth(player.getMaxHealth());
+        player.setFoodLevel(20);
+    }
+
+    default void savePlayerData(Player player, InventoryManager inventoryManager) {
+        FileConfiguration fileConfiguration = inventoryManager.getConfig();
+        PlayerInventory playerInventory = player.getInventory();
+        UUID playerUUID = player.getUniqueId();
+
+        fileConfiguration.set(playerUUID + ".inventory", itemStackArrayToBase64(playerInventory.getContents()));
+        fileConfiguration.set(playerUUID + ".armor", itemStackArrayToBase64(playerInventory.getArmorContents()));
+        fileConfiguration.set(playerUUID + ".experience", getTotalExperience(player));
+        inventoryManager.save();
+    }
+
+    default void loadPlayerData(Player player, InventoryManager inventoryManager) {
+        FileConfiguration fileConfiguration = inventoryManager.getConfig();
+        UUID playerUUID = player.getUniqueId();
+
+        try {
+            player.getInventory().setContents(itemStackArrayFromBase64(fileConfiguration.getString(playerUUID + ".inventory")));
+            player.getInventory().setArmorContents(itemStackArrayFromBase64(fileConfiguration.getString(playerUUID + ".armor")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        player.updateInventory();
+
+        setTotalExperience(player, fileConfiguration.getInt(playerUUID + ".experience"));
+
+        fileConfiguration.set(playerUUID + ".inventory", null);
+        fileConfiguration.set(playerUUID + ".armor", null);
+        fileConfiguration.set(playerUUID + ".experience", null);
+        fileConfiguration.set(String.valueOf(playerUUID), null);
+        inventoryManager.save();
     }
 
 }
