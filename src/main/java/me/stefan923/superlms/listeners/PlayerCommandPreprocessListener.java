@@ -20,13 +20,15 @@ public class PlayerCommandPreprocessListener implements Listener, MessageUtils {
         final Player player = event.getPlayer();
 
         if (instance.getPlayers().contains(player) || instance.getSpectators().contains(player)) {
-            for (final String command : instance.getSettingsManager().getConfig().getStringList("Game Settings.Blocked Commands")) {
-                if (event.getMessage().contains("/" + command)) {
-                    player.sendMessage(formatAll(instance.getLanguageManager().getConfig().getString("General.Blocked Command")));
-                    event.setCancelled(true);
+            for (final String command : instance.getSettingsManager().getConfig().getStringList("Game.Command Whitelist")) {
+                if (event.getMessage().contains("/" + command) || command.equalsIgnoreCase("*")) {
+                    return;
                 }
             }
         }
+
+        player.sendMessage(formatAll(instance.getLanguageManager().getConfig().getString("General.Blocked Command")));
+        event.setCancelled(true);
     }
 
 }
