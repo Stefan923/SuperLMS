@@ -12,13 +12,11 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.UUID;
 
 public class GameManager implements MessageUtils, SerializationUtils, PlayerUtils {
 
@@ -192,24 +190,9 @@ public class GameManager implements MessageUtils, SerializationUtils, PlayerUtil
     public void addPlayer(Player player) {
         instance.getPlayers().add(player);
 
-        UUID playerUUID = player.getUniqueId();
-        PlayerInventory playerInventory = player.getInventory();
         InventoryManager inventoryManager = instance.getInventoryManager();
-
-        inventoryManager.getConfig().set(playerUUID + ".inventory", itemStackArrayToBase64(playerInventory.getContents()));
-        inventoryManager.getConfig().set(playerUUID + ".armor", itemStackArrayToBase64(playerInventory.getArmorContents()));
-        inventoryManager.getConfig().set(playerUUID + ".experience", getTotalExperience(player));
-        inventoryManager.save();
-
-        playerInventory.clear();
-        playerInventory.setHelmet(null);
-        playerInventory.setChestplate(null);
-        playerInventory.setLeggings(null);
-        playerInventory.setBoots(null);
-        setTotalExperience(player, 0);
-        player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
-        player.setHealth(player.getMaxHealth());
-        player.setFoodLevel(20);
+        savePlayerData(player, inventoryManager);
+        resetPlayerData(player);
 
         if (status.equals(GameStatus.WAITING) && instance.getPlayers().size() >= settings.getInt("Game.Minimum Player Count")) {
             status = GameStatus.STARTING;
@@ -232,32 +215,9 @@ public class GameManager implements MessageUtils, SerializationUtils, PlayerUtil
         int playerCount = instance.getPlayers().size();
 
         if (player.isOnline()) {
-            UUID playerUUID = player.getUniqueId();
-            InventoryManager inventoryManager = instance.getInventoryManager();
-            FileConfiguration inventoryConfig = inventoryManager.getConfig();
-
-            PlayerInventory playerInventory = player.getInventory();
-            playerInventory.clear();
-            playerInventory.setHelmet(null);
-            playerInventory.setChestplate(null);
-            playerInventory.setLeggings(null);
-            playerInventory.setBoots(null);
-
-            try {
-                player.getInventory().setContents(itemStackArrayFromBase64(inventoryConfig.getString(playerUUID + ".inventory")));
-                player.getInventory().setArmorContents(itemStackArrayFromBase64(inventoryConfig.getString(playerUUID + ".armor")));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            player.updateInventory();
-            setTotalExperience(player, inventoryConfig.getInt(playerUUID + ".experience"));
-
+            resetPlayerData(player);
             player.teleport(deserializeLocation(settings.getString("Game.Locations.Spawn")));
-            inventoryConfig.set(playerUUID + ".inventory", null);
-            inventoryConfig.set(playerUUID + ".armor", null);
-            inventoryConfig.set(playerUUID + ".experience", null);
-            inventoryConfig.set(String.valueOf(playerUUID), null);
-            inventoryManager.save();
+            loadPlayerData(player, instance.getInventoryManager());
         }
 
         if (status.equals(GameStatus.STARTING) && playerCount < settings.getInt("Game.Minimum Player Count")) {
@@ -283,35 +243,13 @@ public class GameManager implements MessageUtils, SerializationUtils, PlayerUtil
     }
 
     public void removeAllPlayers() {
+        InventoryManager inventoryManager = instance.getInventoryManager();
         for (Iterator<Player> iterator = instance.getPlayers().iterator(); iterator.hasNext(); ) {
             Player player = iterator.next();
 
-            UUID playerUUID = player.getUniqueId();
-            InventoryManager inventoryManager = instance.getInventoryManager();
-            FileConfiguration inventoryConfig = inventoryManager.getConfig();
-
-            PlayerInventory playerInventory = player.getInventory();
-            playerInventory.clear();
-            playerInventory.setHelmet(null);
-            playerInventory.setChestplate(null);
-            playerInventory.setLeggings(null);
-            playerInventory.setBoots(null);
-
-            try {
-                player.getInventory().setContents(itemStackArrayFromBase64(inventoryConfig.getString(playerUUID + ".inventory")));
-                player.getInventory().setArmorContents(itemStackArrayFromBase64(inventoryConfig.getString(playerUUID + ".armor")));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            player.updateInventory();
-            setTotalExperience(player, inventoryConfig.getInt(playerUUID + ".experience"));
-
+            resetPlayerData(player);
             player.teleport(deserializeLocation(settings.getString("Game.Locations.Spawn")));
-            inventoryConfig.set(playerUUID + ".inventory", null);
-            inventoryConfig.set(playerUUID + ".armor", null);
-            inventoryConfig.set(playerUUID + ".experience", null);
-            inventoryConfig.set(String.valueOf(playerUUID), null);
-            inventoryManager.save();
+            loadPlayerData(player, inventoryManager);
 
             iterator.remove();
         }
