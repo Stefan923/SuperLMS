@@ -125,6 +125,9 @@ public class GameManager implements MessageUtils, SerializationUtils, PlayerUtil
                 scheduler.runTask(instance, () -> player.teleport(arenaLocation));
                 player.getInventory().setContents(contents);
                 player.getInventory().setArmorContents(armorContents);
+                player.updateInventory();
+
+                player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
             });
             instance.getSpectators().forEach(player -> scheduler.runTask(instance, () -> player.teleport(arenaLocation)));
         } catch (IOException e) {
