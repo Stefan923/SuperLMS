@@ -1,5 +1,7 @@
 package me.stefan923.superlms.game;
 
+import com.SirBlobman.combatlogx.api.ICombatLogX;
+import com.SirBlobman.combatlogx.api.event.PlayerUntagEvent;
 import me.stefan923.superlms.SuperLMS;
 import me.stefan923.superlms.settings.InventoryManager;
 import me.stefan923.superlms.utils.MessageUtils;
@@ -221,6 +223,11 @@ public class GameManager implements MessageUtils, SerializationUtils, PlayerUtil
             resetPlayerData(player);
             player.teleport(deserializeLocation(settings.getString("Game.Locations.Spawn")));
             loadPlayerData(player, instance.getInventoryManager());
+
+            if (Bukkit.getServer().getPluginManager().isPluginEnabled("CombatLogX")) {
+                ICombatLogX plugin = (ICombatLogX) Bukkit.getPluginManager().getPlugin("CombatLogX");
+                plugin.getCombatManager().untag(player, PlayerUntagEvent.UntagReason.EXPIRE);
+            }
         }
 
         if (status.equals(GameStatus.STARTING) && playerCount < settings.getInt("Game.Minimum Player Count")) {
@@ -247,12 +254,18 @@ public class GameManager implements MessageUtils, SerializationUtils, PlayerUtil
 
     public void removeAllPlayers() {
         InventoryManager inventoryManager = instance.getInventoryManager();
+        ICombatLogX plugin = (ICombatLogX) Bukkit.getPluginManager().getPlugin("CombatLogX");
+
         for (Iterator<Player> iterator = instance.getPlayers().iterator(); iterator.hasNext(); ) {
             Player player = iterator.next();
 
             resetPlayerData(player);
             player.teleport(deserializeLocation(settings.getString("Game.Locations.Spawn")));
             loadPlayerData(player, inventoryManager);
+
+            if (Bukkit.getServer().getPluginManager().isPluginEnabled("CombatLogX")) {
+                plugin.getCombatManager().untag(player, PlayerUntagEvent.UntagReason.EXPIRE);
+            }
 
             iterator.remove();
         }
