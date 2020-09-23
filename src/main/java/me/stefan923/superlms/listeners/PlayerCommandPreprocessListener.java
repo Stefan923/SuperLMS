@@ -19,6 +19,10 @@ public class PlayerCommandPreprocessListener implements Listener, MessageUtils {
     public void onPlayerCommandPreprocess(final PlayerCommandPreprocessEvent event) {
         final Player player = event.getPlayer();
 
+        if (!instance.getPlayers().contains(player) && !instance.getSpectators().contains(player)) {
+            return;
+        }
+
         if (instance.getPlayers().contains(player) || instance.getSpectators().contains(player)) {
             for (final String command : instance.getSettingsManager().getConfig().getStringList("Game.Command Whitelist")) {
                 if (event.getMessage().contains("/" + command) || command.equalsIgnoreCase("*")) {
