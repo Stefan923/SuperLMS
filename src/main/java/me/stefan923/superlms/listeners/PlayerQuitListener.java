@@ -25,7 +25,9 @@ public class PlayerQuitListener implements Listener, MessageUtils {
 
             GameStatus gameStatus = instance.getGameManager().getStatus();
             if (gameStatus.equals(GameStatus.GRACE) || gameStatus.equals(GameStatus.STARTED)) {
-                instance.getGameManager().broadcastInGame(formatAll(instance.getLanguageManager().getConfig().getString("Game.Player Died").replace("%player_name%", player.getName())));
+                instance.getGameManager().broadcastInGame(formatAll(instance.getLanguageManager().getConfig().getString("Game.Player Died")
+                        .replace("%player_name%", player.getName())
+                        .replace("%current_count%", String.valueOf(instance.getPlayers().size()))));
             }
         }
 
