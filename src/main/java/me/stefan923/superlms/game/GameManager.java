@@ -221,7 +221,7 @@ public class GameManager implements MessageUtils, SerializationUtils, PlayerUtil
 
         if (player.isOnline()) {
             resetPlayerData(player);
-            player.teleport(deserializeLocation(settings.getString("Game.Locations.Spawn")));
+            Bukkit.getScheduler().runTask(instance, () -> player.teleport(deserializeLocation(settings.getString("Game.Locations.Spawn"))));
             loadPlayerData(player, instance.getInventoryManager());
 
             if (Bukkit.getServer().getPluginManager().isPluginEnabled("CombatLogX")) {
@@ -255,12 +255,14 @@ public class GameManager implements MessageUtils, SerializationUtils, PlayerUtil
     public void removeAllPlayers() {
         InventoryManager inventoryManager = instance.getInventoryManager();
         ICombatLogX plugin = (ICombatLogX) Bukkit.getPluginManager().getPlugin("CombatLogX");
+        BukkitScheduler scheduler = Bukkit.getScheduler();
+        Location location = deserializeLocation(settings.getString("Game.Locations.Spawn"));
 
         for (Iterator<Player> iterator = instance.getPlayers().iterator(); iterator.hasNext(); ) {
             Player player = iterator.next();
 
             resetPlayerData(player);
-            player.teleport(deserializeLocation(settings.getString("Game.Locations.Spawn")));
+            scheduler.runTask(instance, () -> player.teleport(location));
             loadPlayerData(player, inventoryManager);
 
             if (Bukkit.getServer().getPluginManager().isPluginEnabled("CombatLogX")) {
