@@ -5,6 +5,7 @@ import me.stefan923.superlms.game.GameStatus;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.PlayerInventory;
@@ -17,7 +18,7 @@ public class EntityDamageListener implements Listener {
         this.instance = instance;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamage(final EntityDamageEvent event) {
         final Entity entity = event.getEntity();
         if (!(entity instanceof Player)) {
@@ -35,6 +36,7 @@ public class EntityDamageListener implements Listener {
         if (instance.getPlayers().contains(player)) {
             if (status.equals(GameStatus.WAITING) || status.equals(GameStatus.STARTING) || status.equals(GameStatus.GRACE)) {
                 event.setCancelled(true);
+                return;
             }
 
             if (player.getHealth() - event.getFinalDamage() <= 0 && status.equals(GameStatus.STARTED)) {
